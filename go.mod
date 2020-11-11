@@ -1,4 +1,4 @@
-module rqpkg
+module mygopkg
 
 go 1.14
 
