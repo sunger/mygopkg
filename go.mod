@@ -1,4 +1,4 @@
-module mygopkg
+module github.com/sunger/mygopkg
 
 go 1.14
 
