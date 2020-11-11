@@ -25,7 +25,7 @@ func (r *BsModel) CreateId() {
 		// 时间戳（秒）：1530027865; 10位数的时间戳是以 秒 为单位；
 		r.Id = strconv.FormatInt(time.Now().Unix(), 10)
 	} else if idtp == 1 {
-		id_, _ := uuid.NewV4()
+		id_ := uuid.NewV4()
 		r.Id = id_.String()
 
 		r.Id = strings.Replace(r.Id, "-", "", -1)
