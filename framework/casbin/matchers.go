@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+var E *casbin.Enforcer
+
 func init() {
 
 	E.AddFunction("actionMatch", func(arguments ...interface{}) (i interface{}, e error) {
