@@ -1,5 +1,12 @@
 package casbin
 
+import (
+	"github.com/casbin/casbin/v2"
+)
+
+//全局变量
+var E *casbin.Enforcer
+
 //web请求方法枚举
 var Actions = map[string]int{
 	"get":    1,  //get方法

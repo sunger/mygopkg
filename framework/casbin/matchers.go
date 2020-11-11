@@ -5,9 +5,6 @@ import (
 	"strings"
 )
 
-//全局变量
-var E *casbin.Enforcer
-
 func init() {
 
 	E.AddFunction("actionMatch", func(arguments ...interface{}) (i interface{}, e error) {
