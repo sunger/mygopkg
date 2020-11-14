@@ -23,7 +23,7 @@ type configJsonBody struct {
 
 func DriverStringFunc() (id, b64s string, err error) {
 	e := configJsonBody{}
-	uid, _ := uuid.NewV4()
+	uid := uuid.NewV4()
 	e.Id = uid.String()
 	e.DriverString = base64Captcha.NewDriverString(46, 140, 2, 2, 4, "234567890abcdefghjkmnpqrstuvwxyz", &color.RGBA{240, 240, 246, 246}, []string{"wqy-microhei.ttc"})
 	driver := e.DriverString.ConvertFonts()
@@ -33,7 +33,7 @@ func DriverStringFunc() (id, b64s string, err error) {
 
 func DriverDigitFunc() (id, b64s string, err error) {
 	e := configJsonBody{}
-	uid, _ := uuid.NewV4()
+	uid := uuid.NewV4()
 	e.Id = uid.String()
 	e.DriverDigit = base64Captcha.DefaultDriverDigit
 	driver := e.DriverDigit
