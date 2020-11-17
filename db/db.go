@@ -1,10 +1,11 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"os"
 
-	"github.com/sunger/mygopkg/cfg"
+	"github.com/sunger/mygopkg/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -13,12 +14,25 @@ import (
 
 var Db *gorm.DB
 
-// func initDB() {
-// 	Db = initSqlite() // gormDB()
-// }
+func InitDb(name string) {
+	config.Init(name)
+	c := config.GetConfig()
 
-func init() {
-	Db = initSqlite() // gormDB()
+	dft := c.GetString("database.default")
+	if dft == "sqlite" {
+		name := c.GetString("sqlite.name")
+		Db = initSqlite(name)
+	} else if dft == "mysql" {
+		// "root:root1234@tcp(127.0.0.1:3306)/casbin?charset=utf8mb4&parseTime=True&loc=Local"
+		user := c.GetString("mysql.user")
+		password := c.GetString("mysql.password")
+		host := c.GetString("mysql.host")
+		port := c.GetString("mysql.port")
+		name := c.GetString("mysql.name")
+		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, name)
+		Db = initMysql(dsn)
+	}
+
 }
 
 func gormDB() *gorm.DB {
@@ -43,8 +57,7 @@ func gormDB() *gorm.DB {
 	return db
 }
 
-func initMysql() *gorm.DB {
-	dsn := "root:123123@tcp(localhost:3307)/test?charset=utf8mb4&parseTime=True&loc=Local"
+func initMysql(dsn string) *gorm.DB {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
@@ -58,9 +71,9 @@ func initMysql() *gorm.DB {
 	return db
 }
 
-func initSqlite() *gorm.DB {
-	yml := cfg.NewYamlCfg()
-	db, err := gorm.Open(sqlite.Open(yml.Sqlite.Name), &gorm.Config{})
+func initSqlite(name string) *gorm.DB {
+
+	db, err := gorm.Open(sqlite.Open(name), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal(err)

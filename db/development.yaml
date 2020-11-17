@@ -1,0 +1,30 @@
+database:
+  default: sqlite
+gin:
+  domain:  localhost
+  port:  8080
+cache:
+  enable: false
+  list: [redis,mongoDB]
+mysql:
+  user: root
+  password: Tech2501
+  host: 10.11.22.33
+  port: 3306
+  name: testdb
+sqlite:
+  name: test.db
+
+http:
+  session_domain: appdomain
+  secret: secret
+server:
+  port: :8080
+  appid: appid
+  key: secret_key
+env:
+  mode: debug
+auth:
+  cas: https://domain
+
+
