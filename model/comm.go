@@ -1,5 +1,19 @@
 package model
 
+type IdRequest struct {
+	// id
+	Id string `uri:"id" binding:"required"`
+}
+
+type CommResponse struct {
+	// 代码
+	Code int `json:"code"`
+	// 数据集
+	Data interface{} `json:"data"`
+	// 消息
+	Msg string `json:"msg"`
+}
+
 /*
 分页基类,每个分页基本都要这些字段
 */
