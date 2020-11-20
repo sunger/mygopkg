@@ -14,14 +14,14 @@ import (
 
 var Db *gorm.DB
 
-func InitDb(name string) {
+func InitDb(name string, cfg *gorm.Config) {
 	config.Init(name)
 	c := config.GetConfig()
 
 	dft := c.GetString("database.default")
 	if dft == "sqlite" {
 		name := c.GetString("sqlite.name")
-		Db = initSqlite(name)
+		Db = initSqlite(name, cfg)
 	} else if dft == "mysql" {
 		// "root:root1234@tcp(127.0.0.1:3306)/casbin?charset=utf8mb4&parseTime=True&loc=Local"
 		user := c.GetString("mysql.user")
@@ -30,7 +30,7 @@ func InitDb(name string) {
 		port := c.GetString("mysql.port")
 		name := c.GetString("mysql.name")
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, name)
-		Db = initMysql(dsn)
+		Db = initMysql(dsn, cfg)
 	}
 
 }
@@ -57,8 +57,8 @@ func gormDB() *gorm.DB {
 	return db
 }
 
-func initMysql(dsn string) *gorm.DB {
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+func initMysql(dsn string, cfg *gorm.Config) *gorm.DB {
+	db, err := gorm.Open(mysql.Open(dsn), cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -71,9 +71,9 @@ func initMysql(dsn string) *gorm.DB {
 	return db
 }
 
-func initSqlite(name string) *gorm.DB {
+func initSqlite(name string, cfg *gorm.Config) *gorm.DB {
 
-	db, err := gorm.Open(sqlite.Open(name), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(name), cfg)
 
 	if err != nil {
 		log.Fatal(err)
