@@ -1,5 +1,29 @@
 package model
 
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/sunger/mygopkg/framework/gin_"
+)
+
+
+func CreateResponse() gin_.DecodeResponseFunc {
+	return func(context *gin.Context, res interface{}) error {
+		context.JSON(200, res)
+		return nil
+	}
+}
+
+func CreateIdRequest() gin_.EncodeRequestFunc {
+	return func(c *gin.Context) (i interface{}, e error) {
+		bReq := &IdRequest{}
+		err := c.ShouldBindUri(bReq)
+		if err != nil {
+			return nil, err
+		}
+		return bReq, nil
+	}
+}
+
 type IdRequest struct {
 	// id
 	Id string `uri:"id" binding:"required"`
@@ -13,7 +37,6 @@ type CommResponse struct {
 	// 消息
 	Msg string `json:"msg"`
 }
-
 /*
 分页基类,每个分页基本都要这些字段
 */
