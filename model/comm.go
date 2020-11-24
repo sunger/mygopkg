@@ -5,7 +5,6 @@ import (
 	"github.com/sunger/mygopkg/framework/gin_"
 )
 
-
 func CreateResponse() gin_.DecodeResponseFunc {
 	return func(context *gin.Context, res interface{}) error {
 		context.JSON(200, res)
@@ -31,12 +30,13 @@ type IdRequest struct {
 
 type CommResponse struct {
 	// 代码
-	Code int `json:"code"`
+	Code int `json:"Code"`
 	// 数据集
-	Data interface{} `json:"data"`
+	Data interface{} `json:"Data"`
 	// 消息
-	Msg string `json:"msg"`
+	Msg string `json:"Msg"`
 }
+
 /*
 分页基类,每个分页基本都要这些字段
 */
