@@ -20,7 +20,7 @@ func CreateQueryIdRequest() gin_.EncodeRequestFunc {
 		// err := c.ShouldBindUri(bReq)
 		bReq.Id = c.Request.FormValue("id")
 		if bReq.Id == "" {
-			return nil, errors.New("参数不存在")
+			return nil, errors.New("未提供query参数id")
 		}
 		return bReq, nil
 	}
@@ -29,9 +29,10 @@ func CreateQueryIdRequest() gin_.EncodeRequestFunc {
 func CreateIdRequest() gin_.EncodeRequestFunc {
 	return func(c *gin.Context) (i interface{}, e error) {
 		bReq := &IdRequest{}
-		err := c.ShouldBindUri(bReq)
-		if err != nil {
-			return nil, err
+		// err := c.ShouldBindUri(bReq)
+		bReq.Id = c.Param("id")
+		if bReq.Id == "" {
+			return nil, errors.New("未提供path参数id")
 		}
 		return bReq, nil
 	}
