@@ -1,6 +1,8 @@
 package model
 
 import (
+	"errors"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sunger/mygopkg/framework/gin_"
 )
@@ -9,6 +11,18 @@ func CreateResponse() gin_.DecodeResponseFunc {
 	return func(context *gin.Context, res interface{}) error {
 		context.JSON(200, res)
 		return nil
+	}
+}
+
+func CreateQueryIdRequest() gin_.EncodeRequestFunc {
+	return func(c *gin.Context) (i interface{}, e error) {
+		bReq := &IdRequest{}
+		// err := c.ShouldBindUri(bReq)
+		bReq.Id = c.Request.FormValue("id")
+		if bReq.Id == "" {
+			return nil, errors.New("参数不存在")
+		}
+		return bReq, nil
 	}
 }
 
@@ -25,7 +39,7 @@ func CreateIdRequest() gin_.EncodeRequestFunc {
 
 type IdRequest struct {
 	// id
-	Id string `uri:"id" binding:"required"`
+	Id string //`uri:"id" binding:"required"`
 }
 
 type CommResponse struct {
