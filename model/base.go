@@ -50,7 +50,7 @@ type BaseModel struct {
 
 // 所有树模型类的基类（6个分类相关的字段）
 type TreeModel struct {
-	Grp string `gorm:"column:grp;size:20"`           //树分组标识
+	Grp string `gorm:"column:grp;type:varchar(20);"` //树分组标识
 	Lft int    `gorm:"column:lft;type:int(11);"`     //树左节点
 	Lv  int    `gorm:"column:lv;type:int(2);"`       //树层级
 	Idx int    `gorm:"column:idx;type:int(6);"`      //树层中排序
