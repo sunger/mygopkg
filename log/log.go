@@ -1,13 +1,14 @@
 package log
 
 import (
-	"gopkg.in/natefinch/lumberjack.v2"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"os"
 	"path/filepath"
 	"sync"
 	"time"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 type Options struct {
@@ -34,6 +35,10 @@ var (
 	debugConsoleWS                 = zapcore.Lock(os.Stdout) // 控制台标准输出
 	errorConsoleWS                 = zapcore.Lock(os.Stderr)
 )
+
+func GetLog() *zap.Logger {
+	return l.Logger
+}
 
 type Logger struct {
 	*zap.Logger

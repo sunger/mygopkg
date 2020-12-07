@@ -2,9 +2,10 @@ package log
 
 import (
 	"fmt"
-	"go.uber.org/zap"
 	"testing"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 func TestInitZapV2Logger(t *testing.T) {
@@ -17,4 +18,8 @@ func TestInitZapV2Logger(t *testing.T) {
 		lg.Error(fmt.Sprint("err log ", 4), zap.String("level", `{"a":"7","b":"8"}`))
 
 	}
+
+	lg2 := GetLog()
+
+	lg2.Debug(fmt.Sprint("0000000000 ", 1), zap.Int("line", 0))
 }
