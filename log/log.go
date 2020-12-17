@@ -1,6 +1,7 @@
 package log
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
@@ -37,6 +38,21 @@ var (
 )
 
 func GetLog() *zap.Logger {
+	if l == nil {
+		//日志没有被初始化：初始化一个默认的
+
+		path, err := os.Executable()
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		dir := filepath.Dir(path)
+		NewLogger(
+			SetAppName("ruiqiapp"),
+			SetDevelopment(true),
+			SetLevel(zap.DebugLevel),
+			SetLogFileDir(filepath.Join(dir, "logs")),
+		)
+	}
 	return l.Logger
 }
 
