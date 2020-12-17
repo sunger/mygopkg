@@ -11,11 +11,16 @@ import (
 )
 
 // 所有模型类的基类
+type BModel struct {
+	Id string `gorm:"column:id;primary_key;type:varchar(50)"` //主键
+}
+
+// 所有模型类的基类,带公司和店铺
 type BsModel struct {
-	Id   string `gorm:"column:id;primary_key;type:varchar(50)"` //主键
-	Cid  string `gorm:"column:cid;type:varchar(50);"`           //公司id
-	Sid  string `gorm:"column:sid;type:varchar(50);"`           //店铺id
-	Ctid string `gorm:"column:ctid;type:varchar(50);"`          //创建者id
+	BModel
+	Cid  string `gorm:"column:cid;type:varchar(50);"`  //公司id
+	Sid  string `gorm:"column:sid;type:varchar(50);"`  //店铺id
+	Ctid string `gorm:"column:ctid;type:varchar(50);"` //创建者id
 }
 
 // 创建id：默认使用时间戳方式生成
