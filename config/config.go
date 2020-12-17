@@ -50,5 +50,9 @@ func relativePath(basedir string, path *string) {
 }
 
 func GetConfig() *viper.Viper {
+	if config == nil {
+		fmt.Println("请先config.Init初始化配置文件")
+		return nil
+	}
 	return config
 }

@@ -15,8 +15,13 @@ import (
 var Db *gorm.DB
 
 func InitDb(name string, cfg *gorm.Config) {
-	config.Init(name)
+	// config.Init(name)
 	c := config.GetConfig()
+
+	if c == nil {
+		fmt.Println("配置文件未初始化，数据库未初始化")
+		return nil
+	}
 
 	dft := c.GetString("database.default")
 	if dft == "sqlite" {
