@@ -20,7 +20,7 @@ func InitDb(name string, cfg *gorm.Config) {
 
 	if c == nil {
 		fmt.Println("配置文件未初始化，数据库未初始化")
-		return nil
+		return
 	}
 
 	dft := c.GetString("database.default")
