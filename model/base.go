@@ -24,7 +24,7 @@ type BsModel struct {
 }
 
 // 创建id：默认使用时间戳方式生成
-func (r *BsModel) CreateId() {
+func (r *BModel) CreateId() {
 	idtp := 0 // id生成方式
 
 	if idtp == 0 {
