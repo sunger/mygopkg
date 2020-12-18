@@ -100,7 +100,9 @@ func LoadAllDbs()  {
 
 }
 
-
+func GetAllDbs() *DBService {
+	return  dbService
+}
 
 
 

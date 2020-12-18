@@ -24,4 +24,6 @@ func main() {
 		&db.DbConn{},
 	)
 
+	db.GetAllDbs()
+
 }
