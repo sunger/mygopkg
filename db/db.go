@@ -27,8 +27,9 @@ func InitDb(cfg *gorm.Config) {
 
 	dft := c.GetString("database.default")
 	if dft == "sqlite" {
+		dir := c.GetString("sqlite.dir")
 		name := c.GetString("sqlite.name")
-		Db = InitSqlite(name, cfg)
+		Db = InitSqlite(sqliteConn(dir,name), cfg)
 	} else if dft == "mysql" {
 		// "root:root1234@tcp(127.0.0.1:3306)/casbin?charset=utf8mb4&parseTime=True&loc=Local"
 		user := c.GetString("mysql.user")

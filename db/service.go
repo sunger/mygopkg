@@ -81,7 +81,7 @@ func LoadAllDbs()  {
 		db.SetMaxOpenConns(conf.MaxOpenConns)
 		db.SetMaxIdleConns(conf.MaxIdleConns)
 
-		if conf.Driver == "sqlite3" && !FileExists(conf.Connstring) {
+		if (conf.Driver == "sqlite3" || conf.Driver == "sqlite") && !FileExists(conf.Connstring) {
 			os.MkdirAll(filepath.Dir(conf.Connstring), 0777)
 			f, err := os.Create(conf.Connstring)
 			if err != nil {

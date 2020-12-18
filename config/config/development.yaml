@@ -14,7 +14,7 @@ mysql:
   name: testdb
 sqlite:
   name: test.db
-
+  dir: db/
 http:
   session_domain: appdomain
   secret: secret
