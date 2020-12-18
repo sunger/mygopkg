@@ -35,7 +35,7 @@ type DbConn struct {
 	MaxIdleConns int `gorm:"maxidleconns"`
 	//默认,没有其他更小范围的连接配置，使用此连接
 	IsDefault int `gorm:"column:isdft;size:1"`
-	ShowSql   int `gorm:"column:showsql;size:1"`
+	LogLevel   int `gorm:"column:loglv;size:1"`
 	//是否可用
 	Enable int `gorm:"column:enable;size:1"`
 
@@ -46,8 +46,13 @@ func (DbConn) TableName() string {
 	return "s_dbconn"
 }
 
-func (u *DbConn) Insert() (id string) {
-	u.CreateId()
+func (u *DbConn) Insert(newid string) (id string) {
+	if newid=="" || len(newid) == 0{
+		u.CreateId()
+	}else{
+		u.Id = newid
+	}
+
 	Db.Create(&u)
 	return u.Id
 }
@@ -63,6 +68,14 @@ func (apps *DbConn) Update() (err error) {
 	return Db.Model(&a).Updates(map[string]interface{}{
 		"name":   apps.Name,
 		"dbname": apps.DbName,
+		"host": apps.Host,
+		"driver": apps.Driver,
+		"port": apps.Port,
+		"dbdir":apps.DbDir,
+		"enable":apps.Enable,
+		"maxopenconns":apps.MaxOpenConns,
+		"maxidleconns":apps.MaxIdleConns,
+		"loglv":apps.LogLevel,
 		"user":   apps.User,
 		"pwd":    apps.Pwd,
 		"isdft":  apps.IsDefault}).Error
