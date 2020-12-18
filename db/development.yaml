@@ -12,9 +12,14 @@ mysql:
   host: 10.11.22.33
   port: 3306
   name: testdb
+postgres:
+  user: root
+  password: Tech2501
+  host: 10.11.22.33
+  port: 54321
+  name: testdb
 sqlite:
   name: test.db
-
 http:
   session_domain: appdomain
   secret: secret

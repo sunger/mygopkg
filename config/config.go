@@ -12,6 +12,17 @@ import (
 
 var config *viper.Viper
 
+func pathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
+}
+
 // Init is an exported method that takes the environment starts the viper
 // (external lib) and returns the configuration struct.
 func Init(env string, basedir string) {
@@ -29,6 +40,17 @@ func Init(env string, basedir string) {
 	} else {
 		path = basedir
 		v.AddConfigPath(filepath.Join(path, "config"))
+	}
+
+
+	cfgFullPath:=filepath.Join(filepath.Join(path, "config"), env)
+	cfgFullPath=cfgFullPath+".yaml"
+	exist,_ := pathExists(cfgFullPath )
+	//fmt.Println(exist)
+	if exist {
+		fmt.Println("yaml配置文件：", cfgFullPath)
+	}else{
+		fmt.Println("yaml配置文件不存在：", cfgFullPath)
 	}
 
 	v.SetConfigType("yaml")

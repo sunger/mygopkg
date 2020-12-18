@@ -15,11 +15,11 @@ require (
 	github.com/spf13/viper v1.7.1
 	go.uber.org/zap v1.10.0
 	golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f // indirect
-	golang.org/x/text v0.3.3 // indirect
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gorm.io/driver/mysql v1.0.3
+	gorm.io/driver/postgres v1.0.5
 	gorm.io/driver/sqlite v1.1.3
 	gorm.io/gorm v1.20.6
 )
