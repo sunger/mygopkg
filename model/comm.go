@@ -2,6 +2,9 @@ package model
 
 import (
 	"errors"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sunger/mygopkg/framework/gin_"
@@ -110,4 +113,159 @@ type EditParam struct {
 	Id    string `param:"<in:query><desc:更新主键>"`
 	Name  string `param:"<in:query><desc:更新字段名称>"`
 	Value string `param:"<in:query><desc:更新字段值>"`
+}
+
+func FilterItems(Items []Filter) (strs []string) {
+	strs = make([]string, len(Items))
+	for k, v := range Items {
+
+		if len(v.Val) == 0 {
+			continue
+		}
+
+		if v.Tp == "0" || v.Tp == "1" { // string
+			if v.Tj == "0" { // bh
+				strs[k] = "(" + v.Code + " = '" + v.Val + "')"
+			} else if v.Tj == "1" { // baohan
+				strs[k] = "(" + v.Code + " like '%" + v.Val + "%')"
+			} else if v.Tj == "2" { // start
+				strs[k] = "(" + v.Code + " like '" + v.Val + "%')"
+			} else if v.Tj == "3" { //end
+				strs[k] = "(" + v.Code + " like '%" + v.Val + "')"
+			} else if v.Tj == "4" { //NBh
+				strs[k] = "(" + v.Code + " not like '%" + v.Val + "')"
+			} else if v.Tj == "5" { //NStart
+				strs[k] = "(" + v.Code + " not like '%" + v.Val + "')"
+			} else if v.Tj == "6" { //NEnd
+				strs[k] = "(" + v.Code + " not like '%" + v.Val + "')"
+			} else if v.Tj == "12" { //in
+				strs[k] = "(" + v.Code + " in ('" + strings.Replace(v.Val, ",", "','", -1) + "'))"
+			}
+
+		} else if v.Tp == "4" { //datetime
+
+			if v.Tj == "0" {
+				strs[k] = "(" + v.Code + " = '" + v.Val + "')"
+			} else if v.Tj == "7" { //Lt
+				strs[k] = "(" + v.Code + " < '" + v.Val + "')"
+			} else if v.Tj == "8" { //Lte
+				strs[k] = "(" + v.Code + " <= '" + v.Val + "')"
+			} else if v.Tj == "9" { //Gt
+				strs[k] = "(" + v.Code + " > '" + v.Val + "')"
+			} else if v.Tj == "10" { //Gte
+				strs[k] = "(" + v.Code + " >= '" + v.Val + "')"
+			}
+		} else { //bool number
+			if v.Tj == "0" {
+				strs[k] = "(" + v.Code + " = " + v.Val + ")"
+			} else if v.Tj == "7" { //Lt
+				strs[k] = "(" + v.Code + " < " + v.Val + ")"
+			} else if v.Tj == "8" { //Lte
+				strs[k] = "(" + v.Code + " <= " + v.Val + ")"
+			} else if v.Tj == "9" { //Gt
+				strs[k] = "(" + v.Code + " > " + v.Val + ")"
+			} else if v.Tj == "10" { //Gte
+				strs[k] = "(" + v.Code + " >= " + v.Val + ")"
+			} else if v.Tj == "12" { //in
+				strs[k] = "(" + v.Code + " in (" + v.Val + "))"
+			} else if v.Tj == "13" { //多少天之内的日期查询
+				days, _ := strconv.Atoi(v.Val)
+				if days > 0 {
+					now := time.Now()
+					fmt := "-" + strconv.Itoa(days*24) + "h"
+					// d, _ := time.ParseDuration("-24h")
+					d, _ := time.ParseDuration(fmt)
+					d1 := now.Add(d)
+
+					start_ := d1.Format("2006-01-02 15:04:05")
+					end_ := now.Format("2006-01-02 15:04:05")
+
+					strs[k] = "(" + v.Code + " Between  '" + start_ + "' and '" + end_ + "')"
+				}
+
+			}
+		}
+
+	}
+	return strs
+}
+
+func FilterStr(Items []Filters) string {
+
+	ln := len(Items)
+	filters := make([]string, ln)
+
+	for k, v := range Items {
+		// filters[k] = v.Andor + " 123"
+
+		strs := FilterItems(v.Items)
+
+		//去掉里面的空值
+		var strsValide []string
+		for _, v1 := range strs {
+			if len(v1) > 0 {
+				strsValide = append(strsValide, v1)
+			}
+		}
+
+		ln2 := len(strsValide)
+		if ln2 > 0 {
+			filters[k] = strings.Join(strsValide, " "+v.Andor+" ")
+		}
+	}
+	filterstr := strings.Join(filters, " and ")
+
+	if len(filterstr) < 7 {
+		return ""
+	}
+	return filterstr
+}
+
+func GetFlts(p PageParams) (strs []string) {
+
+	// filters := make([]string, len(p.Fts))
+	orders := make([]string, len(p.Sort))
+
+	//排序字段
+	for k, v := range p.Sort {
+
+		orders[k] = v.Code + " " + v.Val
+	}
+
+	//查询字段
+	// for k, v := range p.Fts {
+	// 	// filters[k] = v.Andor + " 123"
+	// 	filters[k] = strings.Join(FilterItems(v.Items), " "+v.Andor+" ")
+
+	// 	beego.Debug(filters[k])
+	// }
+	strs = make([]string, 2)
+
+	orderstr := strings.Join(orders, ",")
+	filterstr := FilterStr(p.Fts)
+	/*
+	   HasPrefix 判断字符串 s 是否以 prefix 开头：
+	   strings.HasPrefix(s, prefix string) bool
+	   HasSuffix 判断字符串 s 是否以 suffix 结尾：
+	   strings.HasSuffix(s, suffix string) bool
+	*/
+	filterstr = strings.TrimSpace(filterstr)
+	if len(filterstr) > 0 {
+
+		if strings.HasPrefix(filterstr, "or") || strings.HasPrefix(filterstr, "and") {
+			strs[0] = "1=1 " + filterstr
+		} else {
+			strs[0] = filterstr
+		}
+		// if strings.HasPrefix(filterstr, "and") {
+		// 	strs[0] = "1=1 " + filterstr
+		// }
+
+	} else {
+		strs[0] = filterstr
+	}
+
+	strs[1] = orderstr
+
+	return strs
 }
