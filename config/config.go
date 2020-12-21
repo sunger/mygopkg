@@ -12,7 +12,7 @@ import (
 
 var config *viper.Viper
 
-func pathExists(path string) (bool, error) {
+func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
 		return true, nil
@@ -42,14 +42,13 @@ func Init(env string, basedir string) {
 		v.AddConfigPath(filepath.Join(path, "config"))
 	}
 
-
-	cfgFullPath:=filepath.Join(filepath.Join(path, "config"), env)
-	cfgFullPath=cfgFullPath+".yaml"
-	exist,_ := pathExists(cfgFullPath )
+	cfgFullPath := filepath.Join(filepath.Join(path, "config"), env)
+	cfgFullPath = cfgFullPath + ".yaml"
+	exist, _ := PathExists(cfgFullPath)
 	//fmt.Println(exist)
 	if exist {
 		fmt.Println("yaml配置文件：", cfgFullPath)
-	}else{
+	} else {
 		fmt.Println("yaml配置文件不存在：", cfgFullPath)
 	}
 
