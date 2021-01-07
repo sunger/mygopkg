@@ -2,13 +2,14 @@ package db
 
 import (
 	"fmt"
-	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 	"os"
 	"path/filepath"
 	"strings"
+
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 // DBService is a database engine object.
@@ -23,12 +24,19 @@ func FileExists(name string) bool {
 	}
 	return true
 }
+
 var dbService = &DBService{
 	List: map[string]*gorm.DB{},
 }
 
-func LoadAllDbs()  {
+//加载所有数据库,这里在主模块中调用
+func LoadAllDbs() {
+	dbconn := &DbConn{}
+	MapListToDBService(dbconn.List())
+}
 
+//将数据库记录对象DbConn集合转map，这里在主模块之外的模块中调用
+func MapListToDBService(list []DbConn) {
 	var errs []string
 	defer func() {
 		if len(errs) > 0 {
@@ -39,10 +47,7 @@ func LoadAllDbs()  {
 		//	fmt.Println("[gorm] the `default` 数据库必须配置启用")
 		//}
 	}()
-
-	dbconn:=&DbConn{}
-
-	err := loadDBConfig(dbconn.List())
+	err := loadDBConfig(list)
 	if err != nil {
 		fmt.Println("[gorm]" + err.Error())
 		return
@@ -78,7 +83,7 @@ func LoadAllDbs()  {
 		//		engine.SetLogger(faygo.NewLog())
 		// engine.LogMode(true)
 
-		db,_ :=engine.DB()
+		db, _ := engine.DB()
 
 		db.SetMaxOpenConns(conf.MaxOpenConns)
 		db.SetMaxIdleConns(conf.MaxIdleConns)
@@ -103,10 +108,8 @@ func LoadAllDbs()  {
 }
 
 func GetAllDbs() *DBService {
-	return  dbService
+	return dbService
 }
-
-
 
 //var dbService = func() (serv *DBService) {
 //	serv = &DBService{
