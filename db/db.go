@@ -14,12 +14,17 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+// //连接集合，用户根据key获取对应的db（此集合根据数据库中的表生成）(主要满足一个web根据不同的配置，使用不同的数据库)
+// var dbs map[string]*gorm.DB
+
+//默认连接，根据配置文件中获取的连接地址
 var Db *gorm.DB
 
+//根据配置文件初始化数据库
 func InitDb(cfg *gorm.Config) {
 	// config.Init(name)
 	c := config.GetConfig()
-	fmt.Println("配置文件初始化,database.default:"+c.GetString("database.default"))
+	fmt.Println("配置文件初始化,database.default:" + c.GetString("database.default"))
 	if c == nil {
 		fmt.Println("配置文件未初始化，数据库未初始化")
 		return
@@ -29,7 +34,7 @@ func InitDb(cfg *gorm.Config) {
 	if dft == "sqlite" {
 		dir := c.GetString("sqlite.dir")
 		name := c.GetString("sqlite.name")
-		Db = InitSqlite(sqliteConn(dir,name), cfg)
+		Db = InitSqlite(sqliteConn(dir, name), cfg)
 	} else if dft == "mysql" {
 		// "root:root1234@tcp(127.0.0.1:3306)/casbin?charset=utf8mb4&parseTime=True&loc=Local"
 		user := c.GetString("mysql.user")
@@ -52,6 +57,20 @@ func InitDb(cfg *gorm.Config) {
 	}
 
 }
+
+// //根据数据库中的记录初始化数据库集合
+// func InitDbs() {
+// 	loadDBConfig()
+// }
+
+// //根据key获取db连接对象
+// func GetDb(key string) *gorm.DB {
+// 	if value, ok := dbs[key]; ok {
+// 		return value
+// 	} else {
+// 		return nil
+// 	}
+// }
 
 func gormDB() *gorm.DB {
 	newLogger := logger.New(
@@ -116,7 +135,7 @@ func InitSqlite(name string, cfg *gorm.Config) *gorm.DB {
 }
 
 func sqliteConn(dir, name string) string {
-	return filepath.Join(dir, name)
+	return filepath.ToSlash(filepath.Join(dir, name))
 }
 
 func mysqlConn(user, password, host, port, name string) string {

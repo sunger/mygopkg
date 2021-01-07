@@ -13,6 +13,7 @@ import (
 // 所有模型类的基类
 type BModel struct {
 	Id string `gorm:"column:id;primary_key;type:varchar(50)"` //主键
+	DbKey string `gorm:"_"` //数据库key，根据此key指向对应的数据库
 }
 
 // 所有模型类的基类,带公司和店铺

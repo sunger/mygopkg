@@ -1,5 +1,7 @@
 package db
 
+import "fmt"
+
 // import (
 // 	"os"
 // 	"path/filepath"
@@ -29,50 +31,6 @@ var (
 )
 
 func loadDBConfig(list []DbConn) error {
-	// var cfg *ini.File
-	// var err error
-	// var exist bool
-	// cfg, err = ini.Load(DBCONFIG_FILE)
-	// if err != nil {
-	// 	os.MkdirAll(filepath.Dir(DBCONFIG_FILE), 0777)
-	// 	cfg, err = ini.LooseLoad(DBCONFIG_FILE)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// } else {
-	// 	exist = true
-	// }
-	// var hadDefaultConfig bool
-	// for _, section := range cfg.Sections() {
-	// 	if section.Name() == ini.DEFAULT_SECTION {
-	// 		continue
-	// 	}
-	// 	var dbConfig *DBConfig
-	// 	if section.Name() == DEFAULTDB_NAME {
-	// 		dbConfig = DefaultConfig
-	// 		hadDefaultConfig = true
-	// 	} else {
-	// 		dbConfig = &DBConfig{Name: section.Name()}
-	// 	}
-	// 	err := section.MapTo(dbConfig)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	dbConfigs[dbConfig.Name] = dbConfig
-	// }
-	// if !exist {
-	// 	sec, _ := cfg.NewSection(DEFAULTDB_NAME)
-	// 	DefaultConfig.Enable = true
-	// 	err := sec.ReflectFrom(DefaultConfig)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	dbConfigs[DEFAULTDB_NAME] = DefaultConfig
-	// 	return cfg.SaveTo(DBCONFIG_FILE)
-	// }
-	// if !hadDefaultConfig {
-	// 	*DefaultConfig = DBConfig{}
-	// }
 
 	//从数据库里加载数据库配置
 	var hadDefaultConfig bool
@@ -106,7 +64,7 @@ func loadDBConfig(list []DbConn) error {
 		}
 
 		dbConfigs[dbConfig.Name] = dbConfig
-
+		fmt.Println(dbConfig.Name + dbConfig.Driver)
 	}
 
 	if !hadDefaultConfig {

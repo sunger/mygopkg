@@ -34,10 +34,10 @@ func LoadAllDbs()  {
 		if len(errs) > 0 {
 			panic("[gorm] " + strings.Join(errs, "\n"))
 		}
-		if dbService.Default == nil {
-			dbService.Default = Db
-			fmt.Println("[gorm] the `default` 数据库必须配置启用")
-		}
+		//if dbService.Default == nil {
+		//	dbService.Default = Db
+		//	fmt.Println("[gorm] the `default` 数据库必须配置启用")
+		//}
 	}()
 
 	dbconn:=&DbConn{}
@@ -54,6 +54,7 @@ func LoadAllDbs()  {
 		if !conf.Enable {
 			continue
 		}
+		fmt.Println("22222222222222")
 		fmt.Println(conf.Driver)
 		fmt.Println(conf.Connstring)
 
@@ -61,6 +62,7 @@ func LoadAllDbs()  {
 
 		dft := conf.Driver
 		if dft == "sqlite" {
+			fmt.Println("333333333")
 			engine, err = gorm.Open(sqlite.Open(conf.Connstring), Db.Config)
 		} else if dft == "mysql" {
 			engine, err = gorm.Open(mysql.Open(conf.Connstring), Db.Config)

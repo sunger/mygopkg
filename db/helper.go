@@ -10,10 +10,20 @@ import (
 // MustDB gets the specified database engine,
 // or the default DB if no name is specified.
 func MustDB(name ...string) *gorm.DB {
-
+	fmt.Println(name)
 	if len(name) == 0 {
-		return dbService.Default
+		fmt.Println("返回默认")
+		//return dbService.Default
+		return Db
 	}
+	//fmt.Println("返回默认"+name[0])
+
+
+	//for k, ctest := range dbService.List {
+	//	println(k)
+	//	println(ctest.Name())
+	//}
+
 
 	db, ok := dbService.List[name[0]]
 	if !ok {
