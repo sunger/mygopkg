@@ -79,11 +79,11 @@ func MapListToDBService(list []DbConn, config *gorm.Config) {
 		dft := conf.Driver
 		if dft == "sqlite" {
 			fmt.Println("333333333" + conf.Connstring)
-			engine, err = gorm.Open(sqlite.Open(conf.Connstring), Db.Config)
+			engine, err = gorm.Open(sqlite.Open(conf.Connstring), config)
 		} else if dft == "mysql" {
-			engine, err = gorm.Open(mysql.Open(conf.Connstring), Db.Config)
+			engine, err = gorm.Open(mysql.Open(conf.Connstring), config)
 		} else if dft == "postgres" {
-			engine, err = gorm.Open(postgres.Open(conf.Connstring), Db.Config)
+			engine, err = gorm.Open(postgres.Open(conf.Connstring), config)
 		}
 
 		if err != nil {
