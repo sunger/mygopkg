@@ -1,11 +1,14 @@
 package db
 
 import (
+	"errors"
 	"fmt"
-	"log"
+	"github.com/shenyisyn/goft-gin/goft"
+	"github.com/sunger/mygopkg/log"
+	"github.com/sunger/mygopkg/model"
 	"os"
 	"path/filepath"
-
+	syslog "log"
 	"github.com/sunger/mygopkg/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -74,7 +77,7 @@ func InitDb(cfg *gorm.Config) {
 
 func gormDB() *gorm.DB {
 	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		syslog.New(os.Stdout, "\r\n", syslog.LstdFlags), // io writer
 		logger.Config{
 			LogLevel: logger.Info, // Log level
 			Colorful: true,        // 彩色打印
@@ -83,11 +86,11 @@ func gormDB() *gorm.DB {
 	dsn := "root:root1234@tcp(127.0.0.1:3306)/casbin?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: newLogger})
 	if err != nil {
-		log.Fatal(err)
+		log.GetLog().Error(err.Error())
 	}
 	mysqlDB, err := db.DB()
 	if err != nil {
-		log.Fatal(err)
+		log.GetLog().Error(err.Error())
 	}
 	mysqlDB.SetMaxIdleConns(5)
 	mysqlDB.SetMaxOpenConns(10)
@@ -97,11 +100,11 @@ func gormDB() *gorm.DB {
 func InitPostgres(dsn string, cfg *gorm.Config) *gorm.DB {
 	db, err := gorm.Open(postgres.Open(dsn), cfg)
 	if err != nil {
-		log.Fatal(err)
+		log.GetLog().Error(err.Error())
 	}
 	postgresDB, err := db.DB()
 	if err != nil {
-		log.Fatal(err)
+		log.GetLog().Error(err.Error())
 	}
 	postgresDB.SetMaxIdleConns(5)
 	postgresDB.SetMaxOpenConns(10)
@@ -111,11 +114,11 @@ func InitPostgres(dsn string, cfg *gorm.Config) *gorm.DB {
 func InitMysql(dsn string, cfg *gorm.Config) *gorm.DB {
 	db, err := gorm.Open(mysql.Open(dsn), cfg)
 	if err != nil {
-		log.Fatal(err)
+		log.GetLog().Error(err.Error())
 	}
 	mysqlDB, err := db.DB()
 	if err != nil {
-		log.Fatal(err)
+		log.GetLog().Error(err.Error())
 	}
 	mysqlDB.SetMaxIdleConns(5)
 	mysqlDB.SetMaxOpenConns(10)
@@ -127,7 +130,7 @@ func InitSqlite(name string, cfg *gorm.Config) *gorm.DB {
 	db, err := gorm.Open(sqlite.Open(name), cfg)
 
 	if err != nil {
-		log.Fatal(err)
+		log.GetLog().Error(err.Error())
 	}
 	// db.AutoMigrate(&models.Role{},&models.Routers{},&models.Tenant{},&models.Users{})
 
@@ -144,3 +147,25 @@ func mysqlConn(user, password, host, port, name string) string {
 func postgresConn(user, password, host, port, name string) string {
 	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", host, user, password, name, port)
 }
+
+// 获取实体对应的db对象
+func GetDb(m *model.BModel)  *gorm.DB {
+
+	if m.DbKey == "" {
+		log.GetLog().Error("数据库没有配置")
+		goft.Error(errors.New("数据库没有配置"))
+		return nil
+	}
+	db_,ok := DB(m.DbKey)
+	if ok {
+		log.GetLog().Info("数据库DbKey ="+m.DbKey + " dbname="+db_.Name())
+		return db_
+	}
+
+	log.GetLog().Error("没有找到数据库连接")
+	goft.Error(errors.New("没有找到数据库连接"))
+	return nil
+	//err = db.Db.Find(&results).Error
+	//return results, err
+}
+
