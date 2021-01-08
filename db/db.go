@@ -3,13 +3,13 @@ package db
 import (
 	"errors"
 	"fmt"
-	"github.com/shenyisyn/goft-gin/goft"
-	"github.com/sunger/mygopkg/log"
-	"github.com/sunger/mygopkg/model"
+	syslog "log"
 	"os"
 	"path/filepath"
-	syslog "log"
+
+	"github.com/shenyisyn/goft-gin/goft"
 	"github.com/sunger/mygopkg/config"
+	"github.com/sunger/mygopkg/log"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -149,16 +149,16 @@ func postgresConn(user, password, host, port, name string) string {
 }
 
 // 获取实体对应的db对象
-func GetDb(m *model.BModel)  *gorm.DB {
+func GetDb(key string) *gorm.DB {
 
-	if m.DbKey == "" {
+	if key == "" {
 		log.GetLog().Error("数据库没有配置")
 		goft.Error(errors.New("数据库没有配置"))
 		return nil
 	}
-	db_,ok := DB(m.DbKey)
+	db_, ok := DB(key)
 	if ok {
-		log.GetLog().Info("数据库DbKey ="+m.DbKey + " dbname="+db_.Name())
+		log.GetLog().Info("数据库DbKey =" + key + " dbname=" + db_.Name())
 		return db_
 	}
 
@@ -168,4 +168,3 @@ func GetDb(m *model.BModel)  *gorm.DB {
 	//err = db.Db.Find(&results).Error
 	//return results, err
 }
-
