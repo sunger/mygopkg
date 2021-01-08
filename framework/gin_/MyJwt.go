@@ -8,6 +8,7 @@ import (
 
 type UserInfo struct {
 	ID string
+	Db string
 }
 
 const SecrectStr string = "z#@!y_q"
