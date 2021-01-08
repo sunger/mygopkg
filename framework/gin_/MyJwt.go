@@ -1,6 +1,7 @@
 package gin_
 
 import (
+	"fmt"
 	"errors"
 	"time"
 	"github.com/dgrijalva/jwt-go"
@@ -17,7 +18,7 @@ func CreateToken(user *UserInfo) (tokenss string, err error) {
 	//自定义claim
 	claim := jwt.MapClaims{
 		"id": user.ID,
-		// "username": user.Username,
+		"did": user.Db,
 		"nbf": time.Now().Unix(),
 		"iat": time.Now().Unix(),
 	}
@@ -40,23 +41,34 @@ func secret() jwt.Keyfunc {
 }
 
 func ParseToken(tokenss string) (user UserInfo, err error) {
+	//fmt.Println("1111111111111111")
 	user = UserInfo{}
 	token, err := jwt.Parse(tokenss, secret())
 	if err != nil {
+		//fmt.Println("jwtjwtjwtjwtjwtjwtjwtjwtjwtjwtjwt"+err.Error())
 		return user,err
 	}
+	//fmt.Println("222222222222222")
 	claim, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
+		//fmt.Println("token.Claimstoken.Claimstoken.Claims"+err.Error())
 		err = errors.New("cannot convert claim to mapclaim")
 		return user,err
 	}
+	//fmt.Println("3333333333333")
 	//验证token，如果token被修改过则为false
 	if !token.Valid {
+		fmt.Println("token.Validtoken.Validtoken.Validtoken.Validtoken.Valid"+err.Error())
 		err = errors.New("token is invalid")
 		return user,err
 	}
+	//fmt.Println("44444444444")
+	//
+	//for k, v := range claim {
+	//	fmt.Println(k,v)
+	//}
 
 	user.ID = claim["id"].(string)
-	// user.Username = claim["username"].(string)
+	user.Db = claim["did"].(string)
 	return user, nil
 }
