@@ -32,11 +32,11 @@ var dbService = &DBService{
 //加载所有数据库,这里在主模块中调用
 func LoadAllDbs() {
 	dbconn := &DbConn{}
-	MapListToDBService(dbconn.List())
+	MapListToDBService(dbconn.List(), Db.Config)
 }
 
 //将数据库记录对象DbConn集合转map，这里在主模块之外的模块中调用
-func MapListToDBService(list []DbConn) {
+func MapListToDBService(list []DbConn, config *gorm.Config) {
 	var errs []string
 	defer func() {
 		if len(errs) > 0 {
@@ -63,11 +63,22 @@ func MapListToDBService(list []DbConn) {
 		fmt.Println(conf.Driver)
 		fmt.Println(conf.Connstring)
 
+		if (conf.Driver == "sqlite3" || conf.Driver == "sqlite") && !FileExists(conf.Connstring) {
+			os.MkdirAll(filepath.Dir(conf.Connstring), 0777)
+			f, err := os.Create(conf.Connstring)
+			if err != nil {
+				fmt.Println("[gorm]" + err.Error())
+				errs = append(errs, err.Error())
+			} else {
+				f.Close()
+			}
+		}
+
 		var engine *gorm.DB
 
 		dft := conf.Driver
 		if dft == "sqlite" {
-			fmt.Println("333333333")
+			fmt.Println("333333333" + conf.Connstring)
 			engine, err = gorm.Open(sqlite.Open(conf.Connstring), Db.Config)
 		} else if dft == "mysql" {
 			engine, err = gorm.Open(mysql.Open(conf.Connstring), Db.Config)
@@ -87,17 +98,6 @@ func MapListToDBService(list []DbConn) {
 
 		db.SetMaxOpenConns(conf.MaxOpenConns)
 		db.SetMaxIdleConns(conf.MaxIdleConns)
-
-		if (conf.Driver == "sqlite3" || conf.Driver == "sqlite") && !FileExists(conf.Connstring) {
-			os.MkdirAll(filepath.Dir(conf.Connstring), 0777)
-			f, err := os.Create(conf.Connstring)
-			if err != nil {
-				fmt.Println("[gorm]" + err.Error())
-				errs = append(errs, err.Error())
-			} else {
-				f.Close()
-			}
-		}
 
 		dbService.List[conf.Name] = engine
 		if conf.IsDefault {

@@ -26,15 +26,14 @@ func main() {
 	)
 
 	//模拟初始数据库连接
-	//mockDbConn()
+	// mockDbConn()
 
 	//加载所有数据库
 	db.LoadAllDbs()
 	db.GetAllDbs()
 
-	db1 := db.MustDB("1")//数据库中记录id
-	db2 := db.MustDB("2")//数据库中记录id
-
+	db1 := db.MustDB("1") //数据库中记录id
+	db2 := db.MustDB("2") //数据库中记录id
 
 	//模拟初始化数据库连接表
 	db1.AutoMigrate(
@@ -47,8 +46,6 @@ func main() {
 	fmt.Println(db1.Name())
 	fmt.Println(db2.Name())
 
-
-
 	p := model.PageParams{}
 
 	arr := model.GetFlts(p)
@@ -60,21 +57,21 @@ func main() {
 
 }
 
-func mockDbConn(){
+func mockDbConn() {
 	db1 := db.DbConn{}
 
 	db1.Name = "sqlite数据库1"
-	db1.DbName="db1.db"
-	db1.DbDir="testdb"
+	db1.DbName = "db1.db"
+	db1.DbDir = "testdb"
 	db1.Enable = 1
-	db1.Driver="sqlite"
+	db1.Driver = "sqlite"
 	db1.Insert("1")
 
 	db2 := db.DbConn{}
 	db2.Name = "sqlite数据库2"
-	db2.DbName="db2.db"
+	db2.DbName = "db2.db"
 	db2.Enable = 1
-	db2.DbDir="testdb"
-	db2.Driver="sqlite"
+	db2.DbDir = "testdb"
+	db2.Driver = "sqlite"
 	db2.Insert("2")
 }

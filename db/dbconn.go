@@ -42,6 +42,15 @@ type DbConn struct {
 	model.BModel
 }
 
+type DbConnsResponse struct {
+	// 代码
+	Code int `json:"Code"`
+	// 数据集
+	Data []DbConn `json:"Data"`
+	// 消息
+	Msg string `json:"Msg"`
+}
+
 func (DbConn) TableName() string {
 	return "s_dbconn"
 }

@@ -6,10 +6,9 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-
+	"gorm.io/gorm"
 	"github.com/sunger/mygopkg/db"
 	"github.com/sunger/mygopkg/log"
-	"github.com/sunger/mygopkg/model"
 )
 
 // SendRequest 发送request
@@ -47,7 +46,7 @@ func SendRequest(url string, body io.Reader, addHeaders map[string]string, metho
 }
 
 //加载远程数据库连接到内存
-func LoadRemoteDb(url, token string) {
+func LoadRemoteDb(url, token string, config *gorm.Config) {
 
 	header := map[string]string{
 		"token":        token,
@@ -59,7 +58,7 @@ func LoadRemoteDb(url, token string) {
 		log.GetLog().Error("远程请求数据库失败", zap.String("错误信息：", err.Error()))
 	}
 
-	rv := model.CommResponse{}
+	rv := db.DbConnsResponse{}
 
 	err = json.Unmarshal(bts, &rv)
 	if err != nil {
@@ -69,18 +68,18 @@ func LoadRemoteDb(url, token string) {
 	//strs := string(bts)
 
 	if rv.Code == 0 {
-		dbstr := rv.Data.(string)
-		if dbstr == "" {
-			log.GetLog().Error("返回的数据为空")
-		}
-		list := make([]db.DbConn, 0)
+		//dbstr := rv.Data.(string)
+		//if dbstr == "" {
+		//	log.GetLog().Error("返回的数据为空")
+		//}
+		//list := make([]db.DbConn, 0)
+		//list := rv.Data.(string)
+		//err = json.Unmarshal([]byte(dbstr), &list)
+		//if err != nil {
+		//	log.GetLog().Error("反序列化数据库列表失败", zap.String("错误信息：", err.Error()))
+		//}
 
-		err = json.Unmarshal([]byte(dbstr), &list)
-		if err != nil {
-			log.GetLog().Error("反序列化数据库列表失败", zap.String("错误信息：", err.Error()))
-		}
-
-		db.MapListToDBService(list)
+		db.MapListToDBService(rv.Data,config)
 	} else {
 		log.GetLog().Error("返回的Code不等于0")
 	}
