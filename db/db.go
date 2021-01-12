@@ -162,8 +162,8 @@ func GetDb(key string) *gorm.DB {
 		return db_
 	}
 
-	log.GetLog().Error("没有找到数据库连接")
-	goft.Error(errors.New("没有找到数据库连接"))
+	log.GetLog().Error("没有找到数据库连接key:"+key)
+	goft.Error(errors.New("没有找到数据库连接key:"+key))
 	return nil
 	//err = db.Db.Find(&results).Error
 	//return results, err
