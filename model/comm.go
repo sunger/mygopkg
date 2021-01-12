@@ -59,37 +59,37 @@ type CommResponse struct {
 分页基类,每个分页基本都要这些字段
 */
 type ListBase struct {
-	Page  int    `param:"<in:query><desc:当前页>"`
-	Size  int    `param:"<in:query><desc:每页记录数>"`
-	Sort  string `param:"<in:query><desc:排序字段>"`
-	Order int    `param:"<in:query><desc:排序类型:1:asc,0:desc>"`
+	Page  int    `param:"<in:query><desc:当前页>" json:"Page"`
+	Size  int    `param:"<in:query><desc:每页记录数>" json:"Size"`
+	Sort  string `param:"<in:query><desc:排序字段>" json:"Sort"`
+	Order int    `param:"<in:query><desc:排序类型:1:asc,0:desc>" json:"Order"`
 }
 
 type Filter struct {
-	Code string `param:"<in:query><desc:字段名称>"`
-	Tj   string `param:"<in:query><desc:条件（>,<,=）等>"`
-	Val  string `param:"<in:query><desc:字段值>"`
-	Tp   string `param:"<in:query><desc:字段数据类型>"`
+	Code string `param:"<in:query><desc:字段名称>" json:"Code"`
+	Tj   string `param:"<in:query><desc:条件（>,<,=）等>" json:"Tj"`
+	Val  string `param:"<in:query><desc:字段值>" json:"Val"`
+	Tp   string `param:"<in:query><desc:字段数据类型>" json:"Tp"`
 }
 
 type Filters struct {
-	Andor string   `param:"<in:query><desc:and,or>"`
-	Items []Filter `param:"<in:query><desc:条件项数组>"`
+	Andor string   `param:"<in:query><desc:and,or>" json:"Andor"`
+	Items []Filter `param:"<in:query><desc:条件项数组>" json:"Items"`
 }
 
 type Sorts struct {
-	Code string `param:"<in:query><desc:字段名称>"`
-	Val  string `param:"<in:query><desc:字段值>"`
+	Code string `param:"<in:query><desc:字段名称>" json:"Code"`
+	Val  string `param:"<in:query><desc:字段值>" json:"Val"`
 }
 
 /*
 分页基类,每个分页基本都要这些字段
 */
 type PageParams struct {
-	Page int       `param:"<in:query><desc:当前页>"`
-	Size int       `param:"<in:query><desc:每页记录数>"`
-	Sort []Sorts   `param:"<in:query><desc:排序字段集合>"`
-	Fts  []Filters `param:"<in:query><desc:搜索条件>"`
+	Page int       `param:"<in:query><desc:当前页>" json:"Page"`
+	Size int       `param:"<in:query><desc:每页记录数>" json:"Size"`
+	Sort []Sorts   `param:"<in:query><desc:排序字段集合>" json:"Sort"`
+	Fts  []Filters `param:"<in:query><desc:搜索条件>" json:"Fts"`
 }
 
 type PageTotal struct {
@@ -105,8 +105,8 @@ type IdBase struct {
 
 //分页返回格式
 type PageReturnValue struct {
-	Count int
-	List  interface{}
+	Count int `json:"Count"`
+	List  interface{} `json:"List"`
 }
 
 type EditParam struct {

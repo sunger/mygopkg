@@ -5,23 +5,23 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
 
 // 所有模型类的基类
 type BModel struct {
-	Id    string `gorm:"column:id;primary_key;type:varchar(50)"` //主键
-	DbKey string `gorm:"-"`                                      //数据库key，根据此key指向对应的数据库
+	Id string `gorm:"column:id;primary_key;type:varchar(50)" json:"Id"` //主键
+	DbKey string `gorm:"_" json:"-"` //数据库key，根据此key指向对应的数据库
 }
+
 
 // 所有模型类的基类,带公司和店铺
 type BsModel struct {
 	BModel
-	Cid  string `gorm:"column:cid;type:varchar(50);"`  //公司id
-	Sid  string `gorm:"column:sid;type:varchar(50);"`  //店铺id
-	Ctid string `gorm:"column:ctid;type:varchar(50);"` //创建者id
+	Cid  string `gorm:"column:cid;type:varchar(50);" json:"Cid"`  //公司id
+	Sid  string `gorm:"column:sid;type:varchar(50);" json:"Sid"`  //店铺id
+	Ctid string `gorm:"column:ctid;type:varchar(50);" json:"Ctid"` //创建者id
 }
 
 // 创建id：默认使用时间戳方式生成
@@ -49,20 +49,20 @@ func (r *BModel) CreateId() {
 
 // 所有模型类的基类（多3个时间字段）
 type BaseModel struct {
-	CreatedAt time.Time  `gorm:"column:createdat"` //创建时间
-	UpdatedAt time.Time  `gorm:"column:updatedat"` //最后修改时间
-	DeletedAt *time.Time `gorm:"column:deletedat"` //删除时间
+	CreatedAt time.Time  `gorm:"column:createdat" json:"CreatedAt"` //创建时间
+	UpdatedAt time.Time  `gorm:"column:updatedat" json:"UpdatedAt"` //最后修改时间
+	DeletedAt *time.Time `gorm:"column:deletedat" json:"DeletedAt"` //删除时间
 	BsModel
 }
 
 // 所有树模型类的基类（6个分类相关的字段）
 type TreeModel struct {
-	Grp string `gorm:"column:grp;type:varchar(20);"` //树分组标识
-	Lft int    `gorm:"column:lft;type:int(11);"`     //树左节点
-	Lv  int    `gorm:"column:lv;type:int(2);"`       //树层级
-	Idx int    `gorm:"column:idx;type:int(6);"`      //树层中排序
-	Rgt int    `gorm:"column:rgt;type:int(11);"`     //树右节点
-	Pid string `gorm:"column:pid;type:varchar(50);"` //树父节点id
+	Grp string `gorm:"column:grp;type:varchar(20);" json:"Grp"` //树分组标识
+	Lft int    `gorm:"column:lft;type:int(11);" json:"Lft"`     //树左节点
+	Lv  int    `gorm:"column:lv;type:int(2);" json:"Lv"`       //树层级
+	Idx int    `gorm:"column:idx;type:int(6);" json:"Idx"`      //树层中排序
+	Rgt int    `gorm:"column:rgt;type:int(11);" json:"Rgt"`     //树右节点
+	Pid string `gorm:"column:pid;type:varchar(50);" json:"Pid"` //树父节点id
 }
 
 // 防止此代码在所有树型记录中被重复编写（添加动作中）
