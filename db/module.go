@@ -140,6 +140,13 @@ func (apps *Module) Update(ml Module) (err error) {
 
 }
 
+// 更新实体，指定字段指定值
+func (r *Module) UpdateByFeild(id, name, value string) (err error) {
+	r.Id = id
+
+	return Db.Model(r).Update(strings.ToLower(name), value).Error
+}
+
 //分页方法
 func (b *Module) PageList(page, size int, filter string, sort string) ([]Module, int) {
 	db := Db
