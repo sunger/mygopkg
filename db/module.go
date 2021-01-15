@@ -15,6 +15,7 @@ type Module struct {
 	//Mid     string    `gorm:"column:mid;type:varchar(50);"`     //模块id
 	Name          string    `gorm:"column:name;type:varchar(150);"`   //名称
 	CateTp        int       `gorm:"column:catetp;type:int(1);"`       //1网站模块，2  api模块
+	FeeTp        int       `gorm:"column:feetp;type:int(1);"`       //1免费模块，2  收费模块
 	Domain        string    `gorm:"column:domain;type:varchar(250);"` //域名  网站模块时的值
 	IsHttps       int       `gorm:"column:ishttps;type:int(1);""`     //是否https 网站模块时的值
 	Tp            int       `gorm:"column:tp;type:int(1);"`           //1普通模块，2定制模块
