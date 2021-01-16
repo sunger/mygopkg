@@ -2,6 +2,8 @@ package db
 
 import (
 	"errors"
+	"strings"
+
 	//"context"
 	"fmt"
 	"time"
@@ -115,12 +117,12 @@ func (u *Module) Insert() (id string, err error) {
 	err = Db.Where("path = ?", u.Path).Error
 
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, errors.New("路径path不能重复")
+		return "", errors.New("路径path不能重复")
 	}
 	err = Db.Where("no = ?", u.No).Error
 
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, errors.New("编号no不能重复")
+		return "", errors.New("编号no不能重复")
 	}
 
 	u.CreateId()
