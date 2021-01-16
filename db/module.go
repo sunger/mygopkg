@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	//"context"
 	"fmt"
 	"time"
@@ -108,11 +109,23 @@ func (u *Module) FindByName(name string) (Module, error) {
 }
 
 //插入
-func (u *Module) Insert() (id string) {
+func (u *Module) Insert() (id string, err error) {
+
+	err = Db.Where("path = ?", u.Path).Error
+
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, errors.New("路径path不能重复")
+	}
+	err = Db.Where("no = ?", u.No).Error
+
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, errors.New("编号no不能重复")
+	}
+
 	u.CreateId()
 	u.Pubdate = time.Now()
 	Db.Create(&u)
-	return u.Id
+	return u.Id, nil
 }
 
 // 更新实体
