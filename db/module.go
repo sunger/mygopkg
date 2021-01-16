@@ -9,6 +9,7 @@ import (
 	"github.com/sunger/mygopkg/log"
 	"github.com/sunger/mygopkg/model"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	//"google.golang.org/grpc"
 )
 
