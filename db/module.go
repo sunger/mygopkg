@@ -111,9 +111,9 @@ func (u *Module) FindByName(name string) (Module, error) {
 	return user, err
 }
 
-func (u *Module) FindByPathOrNo(path,no string) (Module, error) {
+func (u *Module) FindByPathOrNo(path, no string) (Module, error) {
 	user := Module{}
-	err := Db.Find(&user "path = ? or no = ?", path,no).Error
+	err := Db.Find(&user, "path = ? or no = ?", path, no).Error
 	return user, err
 }
 
