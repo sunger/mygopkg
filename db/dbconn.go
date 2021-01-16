@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+
 	"github.com/sunger/mygopkg/log"
 	"github.com/sunger/mygopkg/model"
 	"go.uber.org/zap"
@@ -14,7 +15,8 @@ type DbConn struct {
 	Name string `gorm:"column:name;size:50"`
 	//数据库名称
 	DbName string `gorm:"column:dbname;size:50"`
-
+	//所属模块名称
+	MdName string `gorm:"column:mdname;size:50"`
 	//Host
 	Host string `gorm:"column:host;size:20"`
 
@@ -35,7 +37,7 @@ type DbConn struct {
 	MaxIdleConns int `gorm:"maxidleconns"`
 	//默认,没有其他更小范围的连接配置，使用此连接
 	IsDefault int `gorm:"column:isdft;size:1"`
-	LogLevel   int `gorm:"column:loglv;size:1"`
+	LogLevel  int `gorm:"column:loglv;size:1"`
 	//是否可用
 	Enable int `gorm:"column:enable;size:1"`
 
@@ -56,9 +58,9 @@ func (DbConn) TableName() string {
 }
 
 func (u *DbConn) Insert(newid string) (id string) {
-	if newid=="" || len(newid) == 0{
+	if newid == "" || len(newid) == 0 {
 		u.CreateId()
-	}else{
+	} else {
 		u.Id = newid
 	}
 
@@ -75,19 +77,19 @@ func (apps *DbConn) Update() (err error) {
 	a := DbConn{}
 	a.Id = apps.Id
 	return Db.Model(&a).Updates(map[string]interface{}{
-		"name":   apps.Name,
-		"dbname": apps.DbName,
-		"host": apps.Host,
-		"driver": apps.Driver,
-		"port": apps.Port,
-		"dbdir":apps.DbDir,
-		"enable":apps.Enable,
-		"maxopenconns":apps.MaxOpenConns,
-		"maxidleconns":apps.MaxIdleConns,
-		"loglv":apps.LogLevel,
-		"user":   apps.User,
-		"pwd":    apps.Pwd,
-		"isdft":  apps.IsDefault}).Error
+		"name":         apps.Name,
+		"dbname":       apps.DbName,
+		"host":         apps.Host,
+		"driver":       apps.Driver,
+		"port":         apps.Port,
+		"dbdir":        apps.DbDir,
+		"enable":       apps.Enable,
+		"maxopenconns": apps.MaxOpenConns,
+		"maxidleconns": apps.MaxIdleConns,
+		"loglv":        apps.LogLevel,
+		"user":         apps.User,
+		"pwd":          apps.Pwd,
+		"isdft":        apps.IsDefault}).Error
 
 }
 
@@ -102,9 +104,8 @@ func (apps *DbConn) Get(id string) (DbConn, error) {
 //分页方法
 func (b *DbConn) List() (list []DbConn) {
 	Db.Find(&list)
-	return  list
+	return list
 }
-
 
 //分页方法
 func (b *DbConn) PageList(page, size int, filter string, sort string) ([]DbConn, int) {
