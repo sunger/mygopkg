@@ -111,6 +111,12 @@ func (u *Module) FindByName(name string) (Module, error) {
 	return user, err
 }
 
+func (u *Module) FindByPathOrNo(path,no string) (Module, error) {
+	user := Module{}
+	err := Db.Find(&user "path = ? or no = ?", path,no).Error
+	return user, err
+}
+
 //插入
 func (u *Module) Insert() (id string, err error) {
 
