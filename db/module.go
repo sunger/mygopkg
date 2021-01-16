@@ -1,7 +1,6 @@
 package db
 
 import (
-	"errors"
 	"strings"
 
 	//"context"
@@ -11,7 +10,6 @@ import (
 	"github.com/sunger/mygopkg/log"
 	"github.com/sunger/mygopkg/model"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 	//"google.golang.org/grpc"
 )
 
@@ -120,16 +118,16 @@ func (u *Module) FindByPathOrNo(path, no string) (Module, error) {
 //插入
 func (u *Module) Insert() (id string, err error) {
 
-	err = Db.Where("path = ?", u.Path).Error
+	// err = Db.Where("path = ?", u.Path).Error
 
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return "", errors.New("路径path不能重复")
-	}
-	err = Db.Where("no = ?", u.No).Error
+	// if !errors.Is(err, gorm.ErrRecordNotFound) {
+	// 	return "", errors.New("路径path不能重复")
+	// }
+	// err = Db.Where("no = ?", u.No).Error
 
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return "", errors.New("编号no不能重复")
-	}
+	// if !errors.Is(err, gorm.ErrRecordNotFound) {
+	// 	return "", errors.New("编号no不能重复")
+	// }
 
 	u.CreateId()
 	u.Pubdate = time.Now()
