@@ -58,6 +58,7 @@ func Init(env string, basedir string) {
 	//v.AddConfigPath("config/")
 	err = v.ReadInConfig()
 	if err != nil {
+		fmt.Println(err.Error())
 		log.GetLog().Fatal("解析配置文件错误", zap.String("path", path))
 	}
 	config = v
