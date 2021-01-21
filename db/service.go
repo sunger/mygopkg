@@ -36,16 +36,20 @@ func LoadAllDbs() {
 }
 
 //将数据库记录对象DbConn集合转map，这里在主模块之外的模块中调用
+//将数据库中默认数据库赋值给 dbService.Default
 func MapListToDBService(list []DbConn, config *gorm.Config) {
 	var errs []string
 	defer func() {
 		if len(errs) > 0 {
-			panic("[gorm] " + strings.Join(errs, "\n"))
+			panic("[MapListToDBService] " + strings.Join(errs, "\n"))
 		}
-		//if dbService.Default == nil {
-		//	dbService.Default = Db
-		//	fmt.Println("[gorm] the `default` 数据库必须配置启用")
-		//}
+		if dbService.Default == nil {
+			//dbService.Default = Db
+			fmt.Println("未配置默认数据库")
+		}else{
+			Db = dbService.Default
+			fmt.Println("配置了默认数据库")
+		}
 	}()
 	err := loadDBConfig(list)
 	if err != nil {

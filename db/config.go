@@ -33,14 +33,24 @@ var (
 func loadDBConfig(list []DbConn) error {
 
 	//从数据库里加载数据库配置
-	var hadDefaultConfig bool
+	//var hadDefaultConfig bool
 	for _, v := range list {
 
 		var dbConfig *DBConfig
-		if v.IsDefault == 1 {
-			dbConfig = DefaultConfig
-			hadDefaultConfig = true
-		} else {
+		//if v.IsDefault == 1 {
+		//	//dbConfig = DefaultConfig
+		//	DefaultConfig = &DBConfig{
+		//		Name:         v.Id,
+		//		Driver:       v.Driver,
+		//		Connstring:   conn,
+		//		Enable:       v.Enable == 1,
+		//		MaxOpenConns: v.MaxOpenConns,
+		//		MaxIdleConns: v.MaxIdleConns,
+		//		IsDefault:    v.IsDefault == 1,
+		//	}
+		//
+		//	hadDefaultConfig = true
+		//} else {
 
 			dft := v.Driver
 			conn := ""
@@ -61,15 +71,15 @@ func loadDBConfig(list []DbConn) error {
 				MaxIdleConns: v.MaxIdleConns,
 				IsDefault:    v.IsDefault == 1,
 			}
-		}
+		//}
 
 		dbConfigs[dbConfig.Name] = dbConfig
 		fmt.Println(dbConfig.Name + dbConfig.Driver)
 	}
 
-	if !hadDefaultConfig {
-		*DefaultConfig = DBConfig{}
-	}
+	//if !hadDefaultConfig {
+	//	*DefaultConfig = DBConfig{}
+	//}
 
 	return nil
 }
