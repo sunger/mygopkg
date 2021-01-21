@@ -19,10 +19,8 @@ type DbConn struct {
 	MdName string `gorm:"column:mdname;size:50"`
 	//Host
 	Host string `gorm:"column:host;size:20"`
-
 	//Port
 	Port string `gorm:"column:port;size:10"`
-
 	//数据库类型
 	Driver string `gorm:"column:driver;size:20"`
 	//账号
@@ -31,13 +29,14 @@ type DbConn struct {
 	DbDir string `gorm:"column:dbdir;size:250"`
 	//密码
 	Pwd string `gorm:"column:pwd;size:30"`
-	//数据库地址
-	//Connstring string `gorm:"column:conn;size:250"`
+	//MaxOpenConns
 	MaxOpenConns int `gorm:"maxopenconns"`
+	//MaxIdleConns
 	MaxIdleConns int `gorm:"maxidleconns"`
 	//默认,没有其他更小范围的连接配置，使用此连接
 	IsDefault int `gorm:"column:isdft;size:1"`
-	LogLevel  int `gorm:"column:loglv;size:1"`
+	//LogLevel
+	LogLevel int `gorm:"column:loglv;size:1"`
 	//是否可用
 	Enable int `gorm:"column:enable;size:1"`
 
@@ -79,6 +78,7 @@ func (apps *DbConn) Update() (err error) {
 	return Db.Model(&a).Updates(map[string]interface{}{
 		"name":         apps.Name,
 		"dbname":       apps.DbName,
+		"mdname":       apps.MdName,
 		"host":         apps.Host,
 		"driver":       apps.Driver,
 		"port":         apps.Port,
