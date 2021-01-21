@@ -101,9 +101,15 @@ func (apps *DbConn) Get(id string) (DbConn, error) {
 	return a, err
 }
 
-//分页方法
+//列表全部
 func (b *DbConn) List() (list []DbConn) {
 	Db.Find(&list)
+	return list
+}
+
+//列表
+func (b *DbConn) ListByModuleName(moduleName string) (list []DbConn) {
+	Db.Where("mdname=? or isdft=1",moduleName).Find(&list)
 	return list
 }
 
