@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/viper"
 	"github.com/sunger/mygopkg/log"
@@ -12,6 +13,38 @@ import (
 
 var config *viper.Viper
 
+
+func substr(s string, pos, length int) string {
+	runes := []rune(s)
+	l := pos + length
+	if l > len(runes) {
+		l = len(runes)
+	}
+	//fmt.Println( l)
+	return string(runes[pos:l])
+}
+
+//上级目录
+func ParentDir(dirctory string) string {
+	//fmt.Println("当前目录：" + dirctory)
+	d := filepath.ToSlash(dirctory)
+	fmt.Println("转换后的当前目录：" + d)
+	return substr(d, 0, strings.LastIndex(d, "/"))
+}
+
+//当前目录
+func Dir() string {
+	path, _ := os.Executable()
+	return filepath.Dir(path)
+}
+
+//下级目录
+func SubDir(dir, sub string) string {
+	path := filepath.Join(dir, sub)
+	return path
+}
+
+//路径是否存在
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
