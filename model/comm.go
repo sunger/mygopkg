@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
 	//"github.com/gin-gonic/gin"
 	//"github.com/sunger/mygopkg/framework/gin_"
 )
@@ -46,6 +45,11 @@ type IdPath struct {
 	Id string `uri:"id" binding:"required,gt=0,lt=50"`
 }
 
+type IdQuery struct {
+	// id
+	Id string `query:"id" binding:"required,gt=0,lt=50"`
+}
+
 type CommResponse struct {
 	// 代码
 	Code int `json:"Code"`
@@ -54,7 +58,6 @@ type CommResponse struct {
 	// 消息
 	Msg string `json:"Msg"`
 }
-
 
 type Filter struct {
 	Code string `json:"Code" binding:"required,gt=0,lt=30"`
@@ -86,6 +89,7 @@ type PageParams struct {
 type PageTotal struct {
 	Total int `param:"<in:query><desc:总记录条数>"`
 }
+
 //
 ///*
 //主键基类,每个
@@ -96,7 +100,7 @@ type PageTotal struct {
 
 //分页返回格式
 type PageReturnValue struct {
-	Count int `json:"Count"`
+	Count int         `json:"Count"`
 	List  interface{} `json:"List"`
 }
 
