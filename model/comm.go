@@ -1,49 +1,49 @@
 package model
 
 import (
-	"errors"
+	//"errors"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/sunger/mygopkg/framework/gin_"
+	//"github.com/gin-gonic/gin"
+	//"github.com/sunger/mygopkg/framework/gin_"
 )
 
-func CreateResponse() gin_.DecodeResponseFunc {
-	return func(context *gin.Context, res interface{}) error {
-		context.JSON(200, res)
-		return nil
-	}
-}
+//func CreateResponse() gin_.DecodeResponseFunc {
+//	return func(context *gin.Context, res interface{}) error {
+//		context.JSON(200, res)
+//		return nil
+//	}
+//}
+//
+//func CreateQueryIdRequest() gin_.EncodeRequestFunc {
+//	return func(c *gin.Context) (i interface{}, e error) {
+//		bReq := &IdRequest{}
+//		// err := c.ShouldBindUri(bReq)
+//		bReq.Id = c.Request.FormValue("id")
+//		if bReq.Id == "" {
+//			return nil, errors.New("未提供query参数id")
+//		}
+//		return bReq, nil
+//	}
+//}
+//
+//func CreateIdRequest() gin_.EncodeRequestFunc {
+//	return func(c *gin.Context) (i interface{}, e error) {
+//		bReq := &IdRequest{}
+//		// err := c.ShouldBindUri(bReq)
+//		bReq.Id = c.Param("id")
+//		if bReq.Id == "" {
+//			return nil, errors.New("未提供path参数id")
+//		}
+//		return bReq, nil
+//	}
+//}
 
-func CreateQueryIdRequest() gin_.EncodeRequestFunc {
-	return func(c *gin.Context) (i interface{}, e error) {
-		bReq := &IdRequest{}
-		// err := c.ShouldBindUri(bReq)
-		bReq.Id = c.Request.FormValue("id")
-		if bReq.Id == "" {
-			return nil, errors.New("未提供query参数id")
-		}
-		return bReq, nil
-	}
-}
-
-func CreateIdRequest() gin_.EncodeRequestFunc {
-	return func(c *gin.Context) (i interface{}, e error) {
-		bReq := &IdRequest{}
-		// err := c.ShouldBindUri(bReq)
-		bReq.Id = c.Param("id")
-		if bReq.Id == "" {
-			return nil, errors.New("未提供path参数id")
-		}
-		return bReq, nil
-	}
-}
-
-type IdRequest struct {
+type IdPath struct {
 	// id
-	Id string //`uri:"id" binding:"required"`
+	Id string `uri:"id" binding:"required,gt=0,lt=50"`
 }
 
 type CommResponse struct {
@@ -55,53 +55,44 @@ type CommResponse struct {
 	Msg string `json:"Msg"`
 }
 
-/*
-分页基类,每个分页基本都要这些字段
-*/
-type ListBase struct {
-	Page  int    `param:"<in:query><desc:当前页>" json:"Page"`
-	Size  int    `param:"<in:query><desc:每页记录数>" json:"Size"`
-	Sort  string `param:"<in:query><desc:排序字段>" json:"Sort"`
-	Order int    `param:"<in:query><desc:排序类型:1:asc,0:desc>" json:"Order"`
-}
 
 type Filter struct {
-	Code string `param:"<in:query><desc:字段名称>" json:"Code"`
-	Tj   string `param:"<in:query><desc:条件（>,<,=）等>" json:"Tj"`
-	Val  string `param:"<in:query><desc:字段值>" json:"Val"`
-	Tp   string `param:"<in:query><desc:字段数据类型>" json:"Tp"`
+	Code string `json:"Code" binding:"required,gt=0,lt=30"`
+	Tj   string `json:"Tj" binding:"required,gt=0,lt=3"`
+	Val  string `json:"Val" binding:"lt=50"`
+	Tp   string `json:"Tp" binding:"required,gt=0,lt=3"`
 }
 
 type Filters struct {
-	Andor string   `param:"<in:query><desc:and,or>" json:"Andor"`
-	Items []Filter `param:"<in:query><desc:条件项数组>" json:"Items"`
+	Andor string   `json:"Andor" binding:"required,gt=0,lt=50"`
+	Items []Filter `json:"Items"`
 }
 
 type Sorts struct {
-	Code string `param:"<in:query><desc:字段名称>" json:"Code"`
-	Val  string `param:"<in:query><desc:字段值>" json:"Val"`
+	Code string `json:"Code" binding:"required,gt=0,lt=30"`
+	Val  string `json:"Val" binding:"lt=50"`
 }
 
 /*
 分页基类,每个分页基本都要这些字段
 */
 type PageParams struct {
-	Page int       `param:"<in:query><desc:当前页>" json:"Page"`
-	Size int       `param:"<in:query><desc:每页记录数>" json:"Size"`
-	Sort []Sorts   `param:"<in:query><desc:排序字段集合>" json:"Sort"`
-	Fts  []Filters `param:"<in:query><desc:搜索条件>" json:"Fts"`
+	Page int       `json:"Page" binding:"required,gt=0"`
+	Size int       `json:"Size" binding:"required,gt=0,lt=1000"`
+	Sort []Sorts   `json:"Sort"`
+	Fts  []Filters `json:"Fts"`
 }
 
 type PageTotal struct {
 	Total int `param:"<in:query><desc:总记录条数>"`
 }
-
-/*
-主键基类,每个
-*/
-type IdBase struct {
-	Id string `param:"<in:query> <required> <len: 1:50> <desc:Id (1~50 个字符)>"`
-}
+//
+///*
+//主键基类,每个
+//*/
+//type IdBase struct {
+//	Id string `param:"<in:query> <required> <len: 1:50> <desc:Id (1~50 个字符)>"`
+//}
 
 //分页返回格式
 type PageReturnValue struct {
@@ -110,9 +101,9 @@ type PageReturnValue struct {
 }
 
 type EditParam struct {
-	Id    string `param:"<in:query><desc:更新主键>"`
-	Name  string `param:"<in:query><desc:更新字段名称>"`
-	Value string `param:"<in:query><desc:更新字段值>"`
+	Id    string `json:"Id" binding:"required,gt=0,lt=50"`
+	Name  string `json:"Name" binding:"required,gt=0,lt=30"`
+	Value string `json:"Value" binding:"required,gt=0,lt=50"`
 }
 
 func FilterItems(Items []Filter) (strs []string) {
