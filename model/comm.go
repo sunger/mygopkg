@@ -50,6 +50,12 @@ type IdQuery struct {
 	Id string `query:"id" binding:"required,gt=0,lt=50"`
 }
 
+type TreeQuery struct {
+	// id
+	Pid string `query:"pid" binding:"required,gt=0,lt=50"`
+	IsAll bool `query:"isall" binding:"required"`
+}
+
 type CommResponse struct {
 	// 代码
 	Code int `json:"Code"`
