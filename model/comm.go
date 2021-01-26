@@ -40,6 +40,13 @@ import (
 //	}
 //}
 
+type CmdArg struct {
+	// 模块版本
+	Vs string
+	// 菜单文件
+	MenuFile string
+}
+
 type IdPath struct {
 	// id
 	Id string `uri:"id" binding:"required,gt=0,lt=50"`
@@ -52,8 +59,8 @@ type IdQuery struct {
 
 type TreeQuery struct {
 	// id
-	Pid string `query:"pid" binding:"required,gt=0,lt=50"`
-	IsAll bool `query:"isall" binding:"required"`
+	Pid   string `query:"pid" binding:"required,gt=0,lt=50"`
+	IsAll bool   `query:"isall" binding:"required"`
 }
 
 type CommResponse struct {
