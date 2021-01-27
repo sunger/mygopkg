@@ -61,8 +61,8 @@ type IdQuery struct {
 
 type TreeQuery struct {
 	// id
-	Pid   string `query:"pid" binding:"required,gt=0,lt=50"`
-	IsAll bool   `query:"isall" binding:"required"`
+	Pid   string `form:"pid"`
+	IsAll bool   `form:"isall" binding:"required"`
 }
 
 type CommResponse struct {
