@@ -45,6 +45,8 @@ type CmdArg struct {
 	Vs string
 	// 菜单文件
 	MenuFile string
+	// 是否外部文件
+	IsExter bool
 }
 
 type IdPath struct {
