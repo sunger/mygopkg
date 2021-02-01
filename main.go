@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/sunger/mygopkg/nsq"
 
 	"github.com/sunger/mygopkg/config"
 	"github.com/sunger/mygopkg/db"
@@ -74,4 +75,6 @@ func mockDbConn() {
 	db2.DbDir = "testdb"
 	db2.Driver = "sqlite"
 	db2.Insert("2")
+
+	nsq.Pg = nsq.RqProgram{}
 }
