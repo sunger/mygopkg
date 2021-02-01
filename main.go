@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/sunger/mygopkg/nsq"
 
 	"github.com/sunger/mygopkg/config"
@@ -77,4 +78,6 @@ func mockDbConn() {
 	db2.Insert("2")
 
 	nsq.Pg = nsq.RqProgram{}
+
+	nsq.Maper["1"] = &nsq.ExeFile{}
 }
