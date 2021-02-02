@@ -51,12 +51,12 @@ type CmdArg struct {
 
 type IdPath struct {
 	// id
-	Id string `uri:"id" binding:"required,gt=0,lt=50"`
+	Id string `uri:"id" binding:"required,gt=0,lt=30"`
 }
 
 type IdQuery struct {
 	// id
-	Id string `query:"id" binding:"required,gt=0,lt=50"`
+	Id string `form:"id" binding:"required,gt=0,lt=30"`
 }
 
 type TreeQuery struct {
