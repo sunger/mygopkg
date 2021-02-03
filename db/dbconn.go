@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"gorm.io/gorm"
 
 	"github.com/sunger/mygopkg/log"
 	"github.com/sunger/mygopkg/model"
@@ -65,6 +66,13 @@ func (u *DbConn) Insert(newid string) (id string) {
 
 	Db.Create(&u)
 	return u.Id
+}
+
+
+//加载本地数据库连接到内存,每个模块在初始化数据库之后必须调用一次
+func (u *DbConn)  LoadMutiDb(config *gorm.Config) {
+	list := u.List()
+	MapListToDBService(list,config)
 }
 
 func (apps *DbConn) Del(id string) (err error) {
