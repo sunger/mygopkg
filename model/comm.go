@@ -53,6 +53,7 @@ type NsqModuleArg struct {
 	CmdArg
 	Module string  //模块名称，比如mem，sys，cms等
 	Cmd    string  //命令，比如reload，install，remove
+	Port   string  //端口
 }
 
 
