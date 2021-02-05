@@ -134,7 +134,7 @@ func (b *DbConn) PageList(page, size int, filter string, sort string) ([]DbConn,
 	if page <= 0 {
 		offset = 0
 	} else {
-		offset = page * size
+		offset = (page - 1) * size
 	}
 
 	if len(filter) == 0 {
