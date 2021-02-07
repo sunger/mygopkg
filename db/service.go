@@ -47,7 +47,7 @@ func MapListToDBService(list []DbConn, config *gorm.Config) {
 			//dbService.Default = Db
 			fmt.Println("未配置默认数据库")
 		}else{
-			Db = dbService.Default
+			//Db = dbService.Default
 			fmt.Println("配置了默认数据库")
 		}
 	}()
