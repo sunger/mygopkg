@@ -3,21 +3,24 @@ package tools
 import (
 	"context"
 	"fmt"
+	"github.com/sunger/mygopkg/db"
 	"mime/multipart"
 	"time"
 
 	"github.com/qiniu/api.v7/v7/auth/qbox"
 	"github.com/qiniu/api.v7/v7/storage"
-	"github.com/sunger/mygopkg/config"
 )
 
 // 接收两个参数 一个文件流 一个 bucket 你的七牛云标准空间的名字
 func Upload(file *multipart.FileHeader) (err error, path string, key string, bucket2 string) {
-	c := config.GetConfig()
-	defaultoss := c.GetString("oss.default")
 
-	bkt := c.GetString(defaultoss + ".bucket")
-	cb := c.GetString(defaultoss + ".notify")
+	//defaultoss := c.GetString("oss.default")
+	//
+	//bkt := c.GetString(defaultoss + ".bucket")
+	//cb := c.GetString(defaultoss + ".notify")
+
+	bkt:= db.GetSet("cms.qiniu.bucket")
+	cb := db.GetSet("cms.qiniu.notify")
 
 	putPolicy := storage.PutPolicy{
 		Scope: bkt,
@@ -31,8 +34,8 @@ func Upload(file *multipart.FileHeader) (err error, path string, key string, buc
 		}
 	}
 
-	ak := c.GetString(defaultoss + ".access-key")
-	sk := c.GetString(defaultoss + ".secret-key")
+	ak := db.GetSet("cms.qiniu.accessid")// c.GetString(defaultoss + ".access-key")
+	sk := db.GetSet("cms.qiniu.secretid")//c.GetString(defaultoss + ".secret-key")
 	fmt.Println("ak", ak)
 	fmt.Println("sk", sk)
 	mac := qbox.NewMac(ak, sk)
@@ -42,7 +45,7 @@ func Upload(file *multipart.FileHeader) (err error, path string, key string, buc
 	cfg := storage.Config{}
 	// 空间对应的机房
 
-	zone := c.GetString(defaultoss + ".zone")
+	zone :=  db.GetSet("cms.qiniu.zone")// c.GetString(defaultoss + ".zone")
 	if zone == "huadong" {
 		cfg.Zone = &storage.ZoneHuadong
 	} else if zone == "huanan" {
@@ -76,14 +79,17 @@ func Upload(file *multipart.FileHeader) (err error, path string, key string, buc
 		fmt.Println("upload file fail:", err)
 		return err, "", "", ""
 	}
-	return err, c.GetString(defaultoss+".img-path") + "/" + ret.Key, ret.Key, bkt
+
+
+	return err, db.GetSet("cms.qiniu.domain") + "/" + ret.Key, ret.Key, bkt
 }
 
 func DeleteFile(key string) error {
-	c := config.GetConfig()
-	defaultoss := c.GetString("oss.default")
-	ak := c.GetString(defaultoss + ".access-key")
-	sk := c.GetString(defaultoss + ".secret-key")
+
+	//defaultoss := c.GetString("oss.default")
+	ak := db.GetSet("cms.qiniu.accessid")// c.GetString(defaultoss + ".access-key")
+	sk := db.GetSet("cms.qiniu.secretid")//c.GetString(defaultoss + ".secret-key")
+	bkt:= db.GetSet("cms.qiniu.bucket")
 	mac := qbox.NewMac(ak, sk)
 	cfg := storage.Config{
 		// 是否使用https域名进行资源管理
@@ -93,7 +99,7 @@ func DeleteFile(key string) error {
 	// 如果没有特殊需求，默认不需要指定
 	//cfg.Zone=&storage.ZoneHuabei
 	bucketManager := storage.NewBucketManager(mac, &cfg)
-	err := bucketManager.Delete(c.GetString(defaultoss+".bucket"), key)
+	err := bucketManager.Delete(bkt, key)
 	if err != nil {
 		fmt.Println(err)
 		return err
