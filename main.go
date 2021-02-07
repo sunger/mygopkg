@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/sunger/mygopkg/db/setting"
 	"github.com/sunger/mygopkg/nsq"
 	"github.com/sunger/mygopkg/tools"
 "fmt"
@@ -10,6 +11,9 @@ import (
 
 func main() {
 
+	t:=setting.SettingCate{}
+
+	fmt.Println(t.Id)
 
 	fmt.Println(tools.GetMac())
 	fmt.Println(tools.GetCpuId())
