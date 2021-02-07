@@ -1,22 +1,44 @@
 package main
 
 import (
-	"github.com/sunger/mygopkg/db/setting"
-	"github.com/sunger/mygopkg/nsq"
-	"github.com/sunger/mygopkg/tools"
-"fmt"
+	"fmt"
+	"github.com/sunger/mygopkg/config"
 	"github.com/sunger/mygopkg/db"
+	"github.com/sunger/mygopkg/nsq"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+
 	//"time"
 )
 
 func main() {
+	config.Init("development", "F:\\go\\mygopkg\\config")
 
-	t:=setting.SettingCate{}
+	cfg := &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info), //logger.Silent
+	}
+	//初始化默认数据库
+	db.InitDb(cfg)
 
-	fmt.Println(t.Id)
+	mp:=db.GetSets("cms")
 
-	fmt.Println(tools.GetMac())
-	fmt.Println(tools.GetCpuId())
+	for k,v := range mp {
+
+		fmt.Println(k,v)
+
+	}
+
+	s:=db.GetSet("cms.qiniu.zone")
+
+	fmt.Println(s)
+	db.ReloadSet("cms")
+	db.ReloadSet("cms.qiniu.zone")
+	//t:=setting.SettingCate{}
+	//
+	//fmt.Println(t.Id)
+	//
+	//fmt.Println(tools.GetMac())
+	//fmt.Println(tools.GetCpuId())
 
 	//t := time.Now()
 	//a:=tools.GetPhysicalID()

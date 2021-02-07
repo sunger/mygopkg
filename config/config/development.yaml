@@ -13,7 +13,7 @@ mysql:
   port: 3306
   name: testdb
 sqlite:
-  name: test.db
+  name: rqdb.db
   dir: db/
 http:
   session_domain: appdomain

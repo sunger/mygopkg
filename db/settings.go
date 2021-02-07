@@ -1,8 +1,7 @@
-package setting
+package db
 
 import (
 	"fmt"
-	"github.com/sunger/mygopkg/db"
 	"github.com/sunger/mygopkg/log"
 	"github.com/sunger/mygopkg/model"
 	"go.uber.org/zap"
@@ -33,19 +32,19 @@ func (SettingCate) TableName() string {
 
 func (r *SettingCate) List() (results []SettingCate, err error) {
 
-	err = db.Db.Find(&results).Error
+	err = Db.Find(&results).Error
 	return results, err
 }
 //删除配置分类，先删除配置项
 func (apps *SettingCate) Del(id string) (err error) {
-	db.Db.Where("cate = ?", id).Delete(Settings{})
-	return db.Db.Where("id = ?", id).Delete(SettingCate{}).Error
+	Db.Where("cate = ?", id).Delete(Settings{})
+	return Db.Where("id = ?", id).Delete(SettingCate{}).Error
 }
 func (u *SettingCate) Insert() (id string) {
 	if u.Id=="" || len(u.Id) == 0{
 		u.CreateId()
 	}
-	db.Db.Create(&u)
+	Db.Create(&u)
 	return u.Id
 }
 
@@ -71,26 +70,26 @@ func (u *Settings) Insert() (id string) {
 	if u.Id=="" || len(u.Id) == 0{
 		u.CreateId()
 	}
-	db.Db.Create(&u)
+	Db.Create(&u)
 	return u.Id
 }
 
 func (apps *Settings) Del(id string) (err error) {
-	return db.Db.Where("id = ?", id).Delete(Settings{}).Error
+	return Db.Where("id = ?", id).Delete(Settings{}).Error
 }
 
 // 更新实体,不存在就插入
 func (apps *Settings) Update() (err error) {
 	a := Settings{}
 	//a.Id = apps.Id
-	count  := db.Db.Where("id=?", apps.Id).Find(&a).RowsAffected
+	count  := Db.Where("id=?", apps.Id).Find(&a).RowsAffected
 	if count == 0 {
 		log.GetLog().Info("不存在"+apps.Id)
-		db.Db.Create(&apps)
+		Db.Create(&apps)
 		return  err
 	}else{
 		log.GetLog().Info("存在"+apps.Id)
-		return db.Db.Model(&a).Updates(map[string]interface{}{"v": apps.Val}).Error
+		return Db.Model(&a).Updates(map[string]interface{}{"v": apps.Val}).Error
 	}
 }
 
@@ -98,16 +97,16 @@ func (apps *Settings) Update() (err error) {
 func (apps *Settings) Get(id string) (Settings, error) {
 	a := Settings{}
 	a.Id = id
-	err := db.Db.Where(&a).Find(&a).Error
+	err := Db.Where(&a).Find(&a).Error
 	return a, err
 }
 func (r *Settings) List(code string) (results []Settings, err error) {
-	err = db.Db.Where("cate=?",code).Find(&results).Error
+	err = Db.Where("cate=?",code).Find(&results).Error
 	return results, err
 }
 //分页方法
 func (b *Settings) PageList(page, size int, filter string, sort string) ([]Settings, int) {
-	db := db.Db
+	db := Db
 
 	table := b.TableName()
 
