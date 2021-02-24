@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+
 	"gorm.io/gorm"
 
 	"github.com/sunger/mygopkg/log"
@@ -13,33 +14,33 @@ import (
 type DbConn struct {
 
 	//名称
-	Name string `gorm:"column:name;size:50"`
+	Name string `gorm:"column:name;size:50" json:"Name"`
 	//数据库名称
-	DbName string `gorm:"column:dbname;size:50"`
+	DbName string `gorm:"column:dbname;size:50" json:"DbName"`
 	//所属模块名称
-	MdName string `gorm:"column:mdname;size:50"`
+	MdName string `gorm:"column:mdname;size:50" json:"MdName"`
 	//Host
-	Host string `gorm:"column:host;size:20"`
+	Host string `gorm:"column:host;size:20" json:"Host"`
 	//Port
-	Port string `gorm:"column:port;size:10"`
+	Port string `gorm:"column:port;size:10" json:"Port"`
 	//数据库类型
-	Driver string `gorm:"column:driver;size:20"`
+	Driver string `gorm:"column:driver;size:20" json:"Driver"`
 	//账号
-	User string `gorm:"column:user;size:20"`
+	User string `gorm:"column:user;size:20" json:"User"`
 	//如果是sqlite，数据库目录
-	DbDir string `gorm:"column:dbdir;size:250"`
+	DbDir string `gorm:"column:dbdir;size:250" json:"DbDir"`
 	//密码
-	Pwd string `gorm:"column:pwd;size:30"`
+	Pwd string `gorm:"column:pwd;size:30" json:"Pwd"`
 	//MaxOpenConns
-	MaxOpenConns int `gorm:"maxopenconns"`
+	MaxOpenConns int `gorm:"maxopenconns" json:"MaxOpenConns"`
 	//MaxIdleConns
-	MaxIdleConns int `gorm:"maxidleconns"`
+	MaxIdleConns int `gorm:"maxidleconns" json:"MaxIdleConns"`
 	//默认,没有其他更小范围的连接配置，使用此连接
-	IsDefault int `gorm:"column:isdft;size:1"`
+	IsDefault int `gorm:"column:isdft;size:1" json:"IsDefault"`
 	//LogLevel
-	LogLevel int `gorm:"column:loglv;size:1"`
+	LogLevel int `gorm:"column:loglv;size:1" json:"LogLevel"`
 	//是否可用
-	Enable int `gorm:"column:enable;size:1"`
+	Enable int `gorm:"column:enable;size:1" json:"Enable"`
 
 	model.BModel
 }
@@ -68,11 +69,10 @@ func (u *DbConn) Insert(newid string) (id string) {
 	return u.Id
 }
 
-
 //加载本地数据库连接到内存,每个模块在初始化数据库之后必须调用一次
-func (u *DbConn)  LoadMutiDb(config *gorm.Config) {
+func (u *DbConn) LoadMutiDb(config *gorm.Config) {
 	list := u.List()
-	MapListToDBService(list,config)
+	MapListToDBService(list, config)
 }
 
 func (apps *DbConn) Del(id string) (err error) {
@@ -117,7 +117,7 @@ func (b *DbConn) List() (list []DbConn) {
 
 //列表
 func (b *DbConn) ListByModuleName(moduleName string) (list []DbConn) {
-	Db.Where("mdname=? or isdft=1",moduleName).Find(&list)
+	Db.Where("mdname=? or isdft=1", moduleName).Find(&list)
 	return list
 }
 
