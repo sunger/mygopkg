@@ -53,6 +53,30 @@ func CreateTokenWithEpr(user *UserInfo,exp int64) (tokenss string, err error) {
 	return
 }
 
+
+func CheckToken(tokenss string) (err error) {
+
+	token, err := jwt.Parse(tokenss, secret())
+	if err != nil {
+		return err
+	}
+	//fmt.Println("222222222222222")
+	_, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		err = errors.New("cannot convert claim to mapclaim")
+		return err
+	}
+	//fmt.Println("3333333333333")
+	//验证token，如果token被修改过则为false
+	if !token.Valid {
+		fmt.Println("token.Validtoken"+err.Error())
+		err = errors.New("token is invalid")
+		return err
+	}
+	return  nil
+}
+
+
 func secret() jwt.Keyfunc {
 	return func(token *jwt.Token) (i interface{}, e error) {
 		return []byte(SecrectStr), nil
