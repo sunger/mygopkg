@@ -1,6 +1,11 @@
 package model
 
 import (
+	"database/sql/driver"
+	"fmt"
+
+	"gorm.io/gorm"
+
 	//"errors"
 	"strconv"
 	"strings"
@@ -51,12 +56,10 @@ type CmdArg struct {
 
 type NsqModuleArg struct {
 	CmdArg
-	Module string  //模块名称，比如mem，sys，cms等
-	Cmd    string  //命令，比如reload，install，remove
-	Port   string  //端口
+	Module string //模块名称，比如mem，sys，cms等
+	Cmd    string //命令，比如reload，install，remove
+	Port   string //端口
 }
-
-
 
 type IdPath struct {
 	// id
@@ -76,11 +79,11 @@ type TreeQuery struct {
 
 type CommResponse struct {
 	// 代码
-	Code int `json:"Code"`
+	Code int `json:"status"`
 	// 数据集
-	Data interface{} `json:"Data"`
+	Data interface{} `json:"data"`
 	// 消息
-	Msg string `json:"Msg"`
+	Msg string `json:"msg"`
 }
 
 type Filter struct {
@@ -104,14 +107,14 @@ type Sorts struct {
 分页基类,每个分页基本都要这些字段
 */
 type PageParams struct {
-	Page int       `json:"Page" binding:"required,gt=0"`
-	Size int       `json:"Size" binding:"required,gt=0,lt=1000"`
+	Page int       `json:"Page" binding:"required"`
+	Size int       `json:"Size" binding:"required,gt=0,lt=1000000"`
 	Sort []Sorts   `json:"Sort"`
 	Fts  []Filters `json:"Fts"`
 }
 
 type PageTotal struct {
-	Total int `param:"<in:query><desc:总记录条数>"`
+	Total int64 `param:"<in:query><desc:总记录条数>"`
 }
 
 //
@@ -124,8 +127,10 @@ type PageTotal struct {
 
 //分页返回格式
 type PageReturnValue struct {
-	Count int         `json:"Count"`
-	List  interface{} `json:"List"`
+	Count int64       `json:"total"`
+	List  interface{} `json:"items"`
+	Page  int         `json:"page"`
+	Size  int         `json:"size"`
 }
 
 type EditParam struct {
@@ -174,6 +179,8 @@ func FilterItems(Items []Filter) (strs []string) {
 			} else if v.Tj == "10" { //Gte
 				strs[k] = "(" + v.Code + " >= '" + v.Val + "')"
 			}
+		} else if v.Tp == "5" { //位运算
+			strs[k] = "((" + v.Code + " & " + v.Val + ") > 0)"
 		} else { //bool number
 			if v.Tj == "0" {
 				strs[k] = "(" + v.Code + " = " + v.Val + ")"
@@ -212,6 +219,9 @@ func FilterItems(Items []Filter) (strs []string) {
 func FilterStr(Items []Filters) string {
 
 	ln := len(Items)
+	if ln == 0 {
+		return ""
+	}
 	filters := make([]string, ln)
 
 	for k, v := range Items {
@@ -241,14 +251,23 @@ func FilterStr(Items []Filters) string {
 }
 
 func GetFlts(p PageParams) (strs []string) {
-
+	if p.Page == 0 {
+		p.Page = 1
+	}
+	lenSort := len(p.Sort)
 	// filters := make([]string, len(p.Fts))
-	orders := make([]string, len(p.Sort))
 
-	//排序字段
-	for k, v := range p.Sort {
+	orderstr := ""
 
-		orders[k] = v.Code + " " + v.Val
+	if lenSort > 0 {
+		orders := make([]string, len(p.Sort))
+		//排序字段
+		for k, v := range p.Sort {
+
+			orders[k] = v.Code + " " + v.Val
+		}
+
+		strings.Join(orders, ",")
 	}
 
 	//查询字段
@@ -260,7 +279,6 @@ func GetFlts(p PageParams) (strs []string) {
 	// }
 	strs = make([]string, 2)
 
-	orderstr := strings.Join(orders, ",")
 	filterstr := FilterStr(p.Fts)
 	/*
 	   HasPrefix 判断字符串 s 是否以 prefix 开头：
@@ -287,4 +305,113 @@ func GetFlts(p PageParams) (strs []string) {
 	strs[1] = orderstr
 
 	return strs
+}
+
+/////////////////////////////////////////////
+//https://www.jianshu.com/p/2d841ffae6af
+///自定义日期类型
+
+const TimeFormat = "2006-01-02 15:04:05"
+
+type LocalTime time.Time
+
+func (t *LocalTime) UnmarshalJSON(data []byte) (err error) {
+	if len(data) == 2 {
+		*t = LocalTime(time.Time{})
+		return
+	}
+
+	now, err := time.Parse(`"`+TimeFormat+`"`, string(data))
+	*t = LocalTime(now)
+	return
+}
+
+func (t LocalTime) MarshalJSON() ([]byte, error) {
+	b := make([]byte, 0, len(TimeFormat)+2)
+	b = append(b, '"')
+	b = time.Time(t).AppendFormat(b, TimeFormat)
+	b = append(b, '"')
+	return b, nil
+}
+
+func (t LocalTime) Value() (driver.Value, error) {
+	if t.String() == "0001-01-01 00:00:00" {
+		return nil, nil
+	}
+	return []byte(time.Time(t).Format(TimeFormat)), nil
+}
+
+func (t *LocalTime) Scan(v interface{}) error {
+	tTime, _ := time.Parse("2006-01-02 15:04:05 +0800 CST", v.(time.Time).String())
+	*t = LocalTime(tTime)
+	return nil
+}
+
+func (t LocalTime) String() string {
+	return time.Time(t).Format(TimeFormat)
+}
+
+/*
+yann：// 指定解析的格式，这样写会出现时区问题
+now, err := time.Parse("+TimeFormat+", string(data))
+// 最好指定一下时区
+loc, _ := time.LoadLocation("Asia/Shanghai")
+now, err := time.ParseInLocation("+TimeFormat+", string(data), loc)
+
+*/
+type BModel2 struct {
+	gorm.Model
+	Id string `gorm:"column:id;primary_key;type:varchar(50)" json:"Id"` //主键
+}
+
+//通用分页方法，只支持一个表或者视图的查询
+func PageList(db *gorm.DB, table string, page, size int, filter string, sort string) ([]map[string]interface{}, int64) {
+
+	if size == 0 {
+		size = 20
+	}
+
+	var offset int
+	if page <= 1 {
+		offset = 0
+	} else {
+		offset = (page - 1) * size
+	}
+
+	if len(filter) == 0 {
+		filter = "1=1"
+	}
+	if len(sort) == 0 {
+		sort = "id desc"
+	}
+
+	arrSql := fmt.Sprintf("SELECT * FROM %s WHERE %s order by %s limit %d offset %d",
+		table, filter, sort, size, offset)
+
+	countSql := fmt.Sprintf("SELECT count(0) as total FROM %s WHERE %s",
+		table, filter)
+
+	results := make([]map[string]interface{}, 0)
+
+	rows, err := db.Raw(arrSql).Rows() // (*sql.Rows, error)
+	defer rows.Close()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for rows.Next() {
+		var a map[string]interface{}
+		db.ScanRows(rows, &a)
+		results = append(results, a)
+	}
+
+	var total PageTotal
+	db.Raw(countSql).Scan(&total)
+	count := total.Total
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return results, count
 }

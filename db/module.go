@@ -35,8 +35,8 @@ type Module struct {
 	Status        byte      `gorm:"column:status" json:"Status"`                    //状态,1:运行，2：停止
 	Available     byte      `gorm:"column:available" json:"Available"`              //可用状态,1:可用，2：不可用
 	IsExter       byte      `gorm:"column:isexter" json:"IsExter"`                  //是否外部exe（外部exe不受主模块控制启动和停止）,1:是，2：否
-	InstallStatus byte      `gorm:"column:inststat" json:"InstallStatus"`        	//安装状态,1:已安装，2：未安装
-	Port           string    `gorm:"column:port;type:varchar(10);" json:"Port"`        //端口
+	InstallStatus byte      `gorm:"column:inststat" json:"InstallStatus"`           //安装状态,1:已安装，2：未安装
+	Port          string    `gorm:"column:port;type:varchar(10);" json:"Port"`      //端口
 	//Price         float32   `gorm:"column:price"`                     //支付价格
 	//MemPrice      float32   `gorm:"column:memprice"`                  //会员价格
 	model.BaseModel
@@ -47,7 +47,7 @@ func (Module) TableName() string {
 }
 
 func (r *Module) FileName() string {
-	return "rqsv2." + r.Path +"." + r.Vs + ".exe"
+	return "rqsv2." + r.Path + "." + r.Vs + ".exe"
 }
 
 //根据主键获取实体
@@ -147,7 +147,6 @@ func (u *Module) Insert() (id string, err error) {
 	u.Status = 2
 	Db.Create(&u)
 
-
 	return u.Id, nil
 }
 
@@ -156,26 +155,26 @@ func (apps *Module) Update(ml Module) (err error) {
 	a := Module{}
 	a.Id = ml.Id
 	return Db.Model(&a).Updates(map[string]interface{}{
-		"name":     ml.Name,
-		"catetp":   ml.CateTp,
-		"tp":       ml.Tp,
-		"feetp":    ml.FeeTp,
-		"ishttps":  ml.IsHttps,
-		"inststat": ml.InstallStatus,
-		"status":   ml.Status,
-		"domain":   ml.Domain,
-		"available":    ml.Available,
-		"remark": ml.Remark,
-		"isexter": ml.IsExter,
-		"port": ml.Port,
-		"vs":   ml.Vs,
-		"url":  ml.Url,
-		"img":  ml.Img,
-		"ui":   ml.Ui,
-		"pub":  ml.Pubdate,
-		"due":  ml.Duedate,
-		"path": ml.Path,
-		"no":   ml.No}).Error
+		"name":      ml.Name,
+		"catetp":    ml.CateTp,
+		"tp":        ml.Tp,
+		"feetp":     ml.FeeTp,
+		"ishttps":   ml.IsHttps,
+		"inststat":  ml.InstallStatus,
+		"status":    ml.Status,
+		"domain":    ml.Domain,
+		"available": ml.Available,
+		"remark":    ml.Remark,
+		"isexter":   ml.IsExter,
+		"port":      ml.Port,
+		"vs":        ml.Vs,
+		"url":       ml.Url,
+		"img":       ml.Img,
+		"ui":        ml.Ui,
+		"pub":       ml.Pubdate,
+		"due":       ml.Duedate,
+		"path":      ml.Path,
+		"no":        ml.No}).Error
 
 }
 
@@ -197,7 +196,7 @@ func (r *Module) UpdateByFeild(id, name, value string) (err error) {
 }
 
 //分页方法
-func (b *Module) PageList(page, size int, filter string, sort string) ([]Module, int) {
+func (b *Module) PageList(page, size int, filter string, sort string) ([]Module, int64) {
 
 	table := b.TableName()
 

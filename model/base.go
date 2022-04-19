@@ -1,26 +1,27 @@
 package model
 
 import (
+	"database/sql/driver"
 	"errors"
+	"fmt"
+	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
 	"strconv"
 	"strings"
 	"time"
-	uuid "github.com/satori/go.uuid"
-	"gorm.io/gorm"
 )
 
 // 所有模型类的基类
 type BModel struct {
-	Id string `gorm:"column:id;primary_key;type:varchar(50)" json:"Id"` //主键
-	DbKey string `gorm:"-" json:"-"` //数据库key，根据此key指向对应的数据库
+	Id    string `gorm:"column:id;primary_key;type:varchar(50)" json:"Id"` //主键
+	DbKey string `gorm:"-" json:"-"`                                       //数据库key，根据此key指向对应的数据库
 }
-
 
 // 所有模型类的基类,带公司和店铺
 type BsModel struct {
 	BModel
-	Cid  string `gorm:"column:cid;type:varchar(50);" json:"Cid"`  //公司id
-	Sid  string `gorm:"column:sid;type:varchar(50);" json:"Sid"`  //店铺id
+	Cid  string `gorm:"column:cid;type:varchar(50);" json:"Cid"`   //公司id
+	Sid  string `gorm:"column:sid;type:varchar(50);" json:"Sid"`   //店铺id
 	Ctid string `gorm:"column:ctid;type:varchar(50);" json:"Ctid"` //创建者id
 }
 
@@ -59,7 +60,7 @@ type BaseModel struct {
 type TreeModel struct {
 	Grp string `gorm:"column:grp;type:varchar(20);" json:"Grp"` //树分组标识
 	Lft int    `gorm:"column:lft;type:int(11);" json:"Lft"`     //树左节点
-	Lv  int    `gorm:"column:lv;type:int(2);" json:"Lv"`       //树层级
+	Lv  int    `gorm:"column:lv;type:int(2);" json:"Lv"`        //树层级
 	Idx int    `gorm:"column:idx;type:int(6);" json:"Idx"`      //树层中排序
 	Rgt int    `gorm:"column:rgt;type:int(11);" json:"Rgt"`     //树右节点
 	Pid string `gorm:"column:pid;type:varchar(50);" json:"Pid"` //树父节点id
@@ -141,9 +142,56 @@ func (r *TreeModel) DelAll(tableName, grp, id string, rgt, lft int, db *gorm.DB)
 //删除当前节点
 func (r *TreeModel) DelOne(tableName, grp, id string, rgt, lft int, db *gorm.DB) (err error) {
 
-	db.Exec("delete from "+tableName+" WHERE grp = ? lft = ?", rgt, lft)
-	db.Exec("update "+tableName+" set rgt = rgt - 1，lft = lft - 1 WHERE grp = ? and lft BETWEEN ? and ?", grp, lft, rgt)
+	db.Exec("delete from "+tableName+" WHERE id = ?", id)
+	db.Exec("update "+tableName+" set rgt = rgt - 1, lft = lft - 1 WHERE grp = ? and lft BETWEEN ? and ?", grp, lft, rgt)
 	db.Exec("update "+tableName+" set rgt = rgt - 2 WHERE grp = ? and rgt > ?", grp, rgt)
 	db.Exec("update "+tableName+" set lft = lft - 2 WHERE grp = ? and lft > ?", grp, rgt)
 	return err
 }
+
+/////////////
+
+//MyTime 自定义时间
+type MyTime time.Time
+
+func (t *MyTime) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		return nil
+	}
+	var err error
+	//前端接收的时间字符串
+	str := string(data)
+	//去除接收的str收尾多余的"
+	timeStr := strings.Trim(str, "\"")
+	t1, err := time.Parse("2006-01-02 15:04:05", timeStr)
+	*t = MyTime(t1)
+	return err
+}
+
+func (t MyTime) MarshalJSON() ([]byte, error) {
+	formatted := fmt.Sprintf("\"%v\"", time.Time(t).Format("2006-01-02 15:04:05"))
+	return []byte(formatted), nil
+}
+
+func (t MyTime) Value() (driver.Value, error) {
+	// MyTime 转换成 time.Time 类型
+	tTime := time.Time(t)
+	return tTime.Format("2006-01-02 15:04:05"), nil
+}
+
+func (t *MyTime) Scan(v interface{}) error {
+	switch vt := v.(type) {
+	case time.Time:
+		// 字符串转成 time.Time 类型
+		*t = MyTime(vt)
+	default:
+		return errors.New("类型处理错误")
+	}
+	return nil
+}
+
+func (t *MyTime) String() string {
+	return fmt.Sprintf("hhh:%s", time.Time(*t).String())
+}
+
+//通用分页方法

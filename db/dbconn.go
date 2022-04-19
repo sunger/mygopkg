@@ -122,7 +122,7 @@ func (b *DbConn) ListByModuleName(moduleName string) (list []DbConn) {
 }
 
 //分页方法
-func (b *DbConn) PageList(page, size int, filter string, sort string) ([]DbConn, int) {
+func (b *DbConn) PageList(page, size int, filter string, sort string) ([]DbConn, int64) {
 
 	table := b.TableName()
 

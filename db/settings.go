@@ -106,7 +106,7 @@ func (r *Settings) List(code string) (results []Settings, err error) {
 }
 
 //分页方法
-func (b *Settings) PageList(page, size int, filter string, sort string) ([]Settings, int) {
+func (b *Settings) PageList(page, size int, filter string, sort string) ([]Settings, int64) {
 	db := Db
 
 	table := b.TableName()
