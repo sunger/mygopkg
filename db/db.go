@@ -3,11 +3,10 @@ package db
 import (
 	"errors"
 	"fmt"
+	"github.com/sunger/mygopkg/goft"
 	syslog "log"
 	"os"
 	"path/filepath"
-
-	"github.com/shenyisyn/goft-gin/goft"
 	"github.com/sunger/mygopkg/config"
 	"github.com/sunger/mygopkg/log"
 	"gorm.io/driver/mysql"
