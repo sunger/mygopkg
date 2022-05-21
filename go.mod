@@ -1,6 +1,6 @@
 module github.com/sunger/mygopkg
 
-go 1.14
+go 1.16
 
 require (
 	github.com/antlr/antlr4 v4.10.1+incompatible // indirect
@@ -52,7 +52,7 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/resty.v1 v1.12.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
-	gopkg.in/yaml.v3 v3.0.0-20220512140231-539c8e751b99 // indirect
+	gopkg.in/yaml.v3 v3.0.0 // indirect
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/driver/postgres v1.3.5
 	gorm.io/driver/sqlite v1.3.2
