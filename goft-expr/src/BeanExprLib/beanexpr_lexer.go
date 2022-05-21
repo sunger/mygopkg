@@ -85,7 +85,7 @@ var serializedLexerAtn = []int32{
 
 var lexerDeserializer = antlr.NewATNDeserializer(nil)
 //var lexerAtn = lexerDeserializer.DeserializeFromUInt16(serializedLexerAtn)
-var lexerAtn = lexerDeserializer.Deserialize(serializedLexerAtn)
+var lexerAtn *antlr.ATN // = lexerDeserializer.Deserialize(serializedLexerAtn)
 var lexerChannelNames = []string{
 	"DEFAULT_TOKEN_CHANNEL", "HIDDEN",
 }
@@ -118,12 +118,12 @@ type BeanExprLexer struct {
 	// TODO: EOF string
 }
 
-var lexerDecisionToDFA = make([]*antlr.DFA, len(lexerAtn.DecisionToState))
+var lexerDecisionToDFA = make([]*antlr.DFA, 0)
 
 func init() {
-	for index, ds := range lexerAtn.DecisionToState {
-		lexerDecisionToDFA[index] = antlr.NewDFA(ds, index)
-	}
+	//for index, ds := range lexerAtn.DecisionToState {
+	//	lexerDecisionToDFA[index] = antlr.NewDFA(ds, index)
+	//}
 }
 
 func NewBeanExprLexer(input antlr.CharStream) *BeanExprLexer {

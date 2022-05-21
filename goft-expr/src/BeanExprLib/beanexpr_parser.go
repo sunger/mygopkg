@@ -44,7 +44,7 @@ var parserATN = []int32{
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 //var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
-var deserializedATN = deserializer.Deserialize(parserATN)
+var deserializedATN *antlr.ATN //= deserializer.Deserialize(parserATN)
 var literalNames = []string{
 	"", "'('", "')'", "','", "", "", "", "", "'nil'", "", "", "'.'", "'=='",
 	"'='", "'>'", "'<'", "'>='", "'<='", "'!='",
@@ -59,12 +59,12 @@ var ruleNames = []string{
 	"start", "methodCall", "functionCall", "functionArgs", "comparisonOperator",
 	"constant",
 }
-var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
+var decisionToDFA = make([]*antlr.DFA, 0)
 
 func init() {
-	for index, ds := range deserializedATN.DecisionToState {
-		decisionToDFA[index] = antlr.NewDFA(ds, index)
-	}
+	//for index, ds := range deserializedATN.DecisionToState {
+	//	decisionToDFA[index] = antlr.NewDFA(ds, index)
+	//}
 }
 
 type BeanExprParser struct {

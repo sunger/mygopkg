@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/sunger/mygopkg/config"
+	"github.com/sunger/mygopkg/comm"
 	"github.com/sunger/mygopkg/db"
 	"github.com/sunger/mygopkg/nsq"
 	"gorm.io/gorm"
@@ -12,6 +13,14 @@ import (
 )
 
 func main() {
+
+	id, b64s, err := comm.DriverDigitFunc()
+	if err != nil {
+		fmt.Println(id)
+		fmt.Println(b64s)
+		fmt.Println(err)
+		return
+	}
 	config.Init("development", "F:\\go\\mygopkg\\config")
 
 	cfg := &gorm.Config{
