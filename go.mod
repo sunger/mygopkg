@@ -23,7 +23,7 @@ require (
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.13 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	github.com/mojocn/base64Captcha v1.3.1
+	github.com/mojocn/base64Captcha v1.3.5
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/nsqio/go-diskqueue v1.1.0 // indirect
@@ -47,6 +47,7 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.0.0-20220518034528-6f7dac969898 // indirect
+	golang.org/x/image v0.0.0-20220413100746-70e8d0d3baa9 // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
