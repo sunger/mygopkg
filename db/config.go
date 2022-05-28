@@ -3,7 +3,6 @@ package db
 import (
 	"github.com/sunger/mygopkg/log"
 	"strings"
-	"fmt"
 )
 
 // import (
@@ -33,59 +32,59 @@ var (
 		IsDefault:    true,
 	}
 )
-func loadDBConfig(list []DbConn) error {
-
-	//从数据库里加载数据库配置
-	//var hadDefaultConfig bool
-	for _, v := range list {
-
-		var dbConfig *DBConfig
-		//if v.IsDefault == 1 {
-		//	//dbConfig = DefaultConfig
-		//	DefaultConfig = &DBConfig{
-		//		Name:         v.Id,
-		//		Driver:       v.Driver,
-		//		Connstring:   conn,
-		//		Enable:       v.Enable == 1,
-		//		MaxOpenConns: v.MaxOpenConns,
-		//		MaxIdleConns: v.MaxIdleConns,
-		//		IsDefault:    v.IsDefault == 1,
-		//	}
-		//
-		//	hadDefaultConfig = true
-		//} else {
-
-		dft := v.Driver
-		conn := ""
-		if dft == "sqlite" {
-			conn = sqliteConn(v.DbDir, v.DbName)
-		} else if dft == "mysql" {
-			conn = mysqlConn(v.User, v.Pwd, v.Host, v.Port, v.DbName)
-		} else if dft == "postgres" {
-			conn = postgresConn(v.User, v.Pwd, v.Host, v.Port, v.DbName)
-		}
-
-		dbConfig = &DBConfig{
-			Name:         v.Id,
-			Driver:       v.Driver,
-			Connstring:   conn,
-			Enable:       v.Enable == 1,
-			MaxOpenConns: v.MaxOpenConns,
-			MaxIdleConns: v.MaxIdleConns,
-			IsDefault:    v.IsDefault == 1,
-		}
-		//}
-
-		dbConfigs[dbConfig.Name] = dbConfig
-		fmt.Println(dbConfig.Name + dbConfig.Driver)
-	}
-
-	//if !hadDefaultConfig {
-	//	*DefaultConfig = DBConfig{}
-	//}
-
-	return nil
-}
+//func loadDBConfig(list []DbConn) error {
+//
+//	//从数据库里加载数据库配置
+//	//var hadDefaultConfig bool
+//	for _, v := range list {
+//
+//		var dbConfig *DBConfig
+//		//if v.IsDefault == 1 {
+//		//	//dbConfig = DefaultConfig
+//		//	DefaultConfig = &DBConfig{
+//		//		Name:         v.Id,
+//		//		Driver:       v.Driver,
+//		//		Connstring:   conn,
+//		//		Enable:       v.Enable == 1,
+//		//		MaxOpenConns: v.MaxOpenConns,
+//		//		MaxIdleConns: v.MaxIdleConns,
+//		//		IsDefault:    v.IsDefault == 1,
+//		//	}
+//		//
+//		//	hadDefaultConfig = true
+//		//} else {
+//
+//		dft := v.Driver
+//		conn := ""
+//		if dft == "sqlite" {
+//			conn = sqliteConn(v.DbDir, v.DbName)
+//		} else if dft == "mysql" {
+//			conn = mysqlConn(v.User, v.Pwd, v.Host, v.Port, v.DbName)
+//		} else if dft == "postgres" {
+//			conn = postgresConn(v.User, v.Pwd, v.Host, v.Port, v.DbName)
+//		}
+//
+//		dbConfig = &DBConfig{
+//			Name:         v.Id,
+//			Driver:       v.Driver,
+//			Connstring:   conn,
+//			Enable:       v.Enable == 1,
+//			MaxOpenConns: v.MaxOpenConns,
+//			MaxIdleConns: v.MaxIdleConns,
+//			IsDefault:    v.IsDefault == 1,
+//		}
+//		//}
+//
+//		dbConfigs[dbConfig.Name] = dbConfig
+//		fmt.Println(dbConfig.Name + dbConfig.Driver)
+//	}
+//
+//	//if !hadDefaultConfig {
+//	//	*DefaultConfig = DBConfig{}
+//	//}
+//
+//	return nil
+//}
 
 
 

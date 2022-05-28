@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/sunger/mygopkg/goft-expr/src/BeanExprLib"
+	"github.com/sunger/mygopkg/goft-expr/BeanExprLib"
 	"reflect"
 	"strconv"
 	"strings"

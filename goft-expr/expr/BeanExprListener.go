@@ -2,7 +2,7 @@ package expr
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/sunger/mygopkg/goft-expr/src/BeanExprLib"
+	"github.com/sunger/mygopkg/goft-expr/BeanExprLib"
 	"log"
 	"reflect"
 	"strings"

@@ -1,5 +1,5 @@
 database:
-  default: sqlite
+  default: mysql
 gin:
   domain:  localhost
   port:  8080
@@ -9,9 +9,9 @@ cache:
 mysql:
   user: root
   password: root
-  host: 10.11.22.33
+  host: localhost
   port: 3306
-  name: testdb
+  name: test
 sqlite:
   name: F:/test/test.db
 

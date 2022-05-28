@@ -1,7 +1,7 @@
 package Injector
 
 import (
-	"github.com/sunger/mygopkg/goft-expr/src/expr"
+	"github.com/sunger/mygopkg/goft-expr/expr"
 	"reflect"
 )
 
