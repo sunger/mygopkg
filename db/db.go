@@ -190,10 +190,9 @@ func postgresConn(user, password, host, port, name string) string {
 // 获取实体对应的db对象
 func GetDb(key string) *gorm.DB {
 
-	if key == "" {
-		log.GetLog().Error("数据库没有配置")
-		goft.Error(errors.New("数据库没有配置"))
-		return nil
+	if key == "" || len(key) == 0 {
+		log.GetLog().Error("key为空,使用默认数据库")
+		return Db
 	}
 	db_, ok := DB(key)
 	if ok {
@@ -201,9 +200,9 @@ func GetDb(key string) *gorm.DB {
 		return db_
 	}
 
-	log.GetLog().Error("没有找到数据库连接key:" + key)
-	goft.Error(errors.New("没有找到数据库连接key:" + key))
-	return nil
+	log.GetLog().Error("没有找到数据库连接key:" + key + " 使用默认数据库")
+	goft.Error(errors.New("没有找到数据库连接key:" + key+ " 使用默认数据库"))
+	return Db
 	//err = db.Db.Find(&results).Error
 	//return results, err
 }
