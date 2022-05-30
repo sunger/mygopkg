@@ -11,9 +11,10 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/google/uuid v1.1.2
 	github.com/jackc/pgx/v4 v4.16.1 // indirect
 	github.com/jinzhu/gorm v1.9.16
-	github.com/mattn/go-sqlite3 v1.14.13 // indirect
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
@@ -27,6 +28,8 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/viper v1.11.0
+	github.com/stretchr/testify v1.7.1
+	github.com/thanhpk/randstr v1.0.4
 	github.com/ugorji/go v1.2.7 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
