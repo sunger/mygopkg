@@ -57,13 +57,3 @@ func GetIPFromRequest(req *http.Request) string {
 
 	return GetIPInfo(clientIP)
 }
-
-func LogInfo(ctx *context.Context, f string, v ...interface{}) {
-	ipString := fmt.Sprintf("(%s) ", GetIPFromRequest(ctx.Request))
-	logs.Info(ipString+f, v...)
-}
-
-func LogWarning(ctx *context.Context, f string, v ...interface{}) {
-	ipString := fmt.Sprintf("(%s) ", GetIPFromRequest(ctx.Request))
-	logs.Warning(ipString+f, v...)
-}

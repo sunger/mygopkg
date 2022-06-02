@@ -17,6 +17,7 @@ package util
 import (
 	"fmt"
 	"github.com/sunger/mygopkg/log"
+	"go.uber.org/zap"
 )
 
 func SafeGoroutine(fn func()) {
@@ -29,7 +30,7 @@ func SafeGoroutine(fn func()) {
 				if !ok {
 					err = fmt.Errorf("%v", r)
 				}
-				log.GetLog().Error("goroutine panic: %v", err)
+				log.GetLog().Error("goroutine panic: %v", zap.String("",err.Error()))
 			}
 		}()
 		fn()
