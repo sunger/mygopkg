@@ -1,7 +1,7 @@
 package db
 
 import (
-	"errors"
+	// "errors"
 	"fmt"
 	syslog "log"
 	"os"
@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/sunger/mygopkg/config"
-	"github.com/sunger/mygopkg/goft"
+	// "github.com/sunger/mygopkg/goft"
 	"github.com/sunger/mygopkg/log"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
