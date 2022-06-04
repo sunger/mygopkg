@@ -196,12 +196,12 @@ func GetDb(key string) *gorm.DB {
 	}
 	db_, ok := DB(key)
 	if ok {
-		log.GetLog().Info("数据库DbKey =" + key + " dbname=" + db_.Name())
+		log.GetLog().Info("找到数据库DbKey =" + key + " dbname=" + db_.Name())
 		return db_
 	}
 
 	log.GetLog().Error("没有找到数据库连接key:" + key + " 使用默认数据库")
-	goft.Error(errors.New("没有找到数据库连接key:" + key+ " 使用默认数据库"))
+	// goft.Error(errors.New("没有找到数据库连接key:" + key+ " 使用默认数据库"))
 	return Db
 	//err = db.Db.Find(&results).Error
 	//return results, err
