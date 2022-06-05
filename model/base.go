@@ -59,6 +59,7 @@ type BaseModel struct {
 
 // 所有树模型类的基类（6个分类相关的字段）
 type TreeModel struct {
+	BModel
 	Grp string `gorm:"column:grp;type:varchar(20);" json:"Grp"` //树分组标识
 	Lft int    `gorm:"column:lft;type:int(11);" json:"Lft"`     //树左节点
 	Lv  int    `gorm:"column:lv;type:int(2);" json:"Lv"`        //树层级
