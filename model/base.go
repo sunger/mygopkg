@@ -13,8 +13,9 @@ import (
 
 // 所有模型类的基类
 type BModel struct {
-	Id    string `gorm:"column:id;primary_key;type:varchar(50)" json:"Id"` //主键
-	DbKey string `gorm:"-" json:"-"`                                       //数据库key，根据此key指向对应的数据库
+	Id    string `gorm:"column:id;primary_key;type:varchar(50)" json:"Id"` 	//主键
+	Tid  string `gorm:"column:tid;type:varchar(50);" json:"Tid"`   					//租户id
+	DbKey string `gorm:"-" json:"-"`                                       	//数据库key，根据此key指向对应的数据库
 }
 
 // 所有模型类的基类,带公司和店铺
@@ -64,12 +65,14 @@ type TreeModel struct {
 	Idx int    `gorm:"column:idx;type:int(6);" json:"Idx"`      //树层中排序
 	Rgt int    `gorm:"column:rgt;type:int(11);" json:"Rgt"`     //树右节点
 	Pid string `gorm:"column:pid;type:varchar(50);" json:"Pid"` //树父节点id
+	Tid string `gorm:"column:tid;type:varchar(50);" json:"Tid"` //租户id
 }
 
 // 防止此代码在所有树型记录中被重复编写（添加动作中）
 // 树模型类的插入,具体的插入自己操作，这里只负责修改生成树结构，此方法在自己的插入动作之前操作，且应该和自己的插入在同一个事务中
-func (r *TreeModel) BeforInsertTree(tableName string, db *gorm.DB) (err error) {
+func (r *TreeModel) BeforInsertTree(tableName string, db *gorm.DB) (parent TreeModel,err error) {
 	var count int64 = 0
+	pnode := TreeModel{}
 	if len(r.Pid) == 0 {
 
 		// gorm.MustDB().Model(&r).Count(&count)
@@ -85,15 +88,15 @@ func (r *TreeModel) BeforInsertTree(tableName string, db *gorm.DB) (err error) {
 		// }
 
 	} else {
-		pnode := TreeModel{}
+	
 
 		// if pnode, err = r.Get(r.Pid); err != nil {
 		// 	return errors.New("父节点对应的记录不存在")
 		// }
 
-		db.Table(tableName).Where("id=?", r.Pid).Select("rgt, lft, lv, grp, idx, pid").First(&pnode).Count(&count)
+		db.Table(tableName).Where("id=?", r.Pid).Select("rgt, lft, lv, grp, idx, pid, tid").First(&pnode).Count(&count)
 		if count == 0 {
-			return errors.New("父节点对应的记录不存在")
+			return pnode , errors.New("父节点对应的记录不存在")
 		}
 
 		//查询此父节点下的最大子节点
@@ -102,7 +105,7 @@ func (r *TreeModel) BeforInsertTree(tableName string, db *gorm.DB) (err error) {
 
 		// gorm.MustDB().Order("idx desc").Where("pid=?", r.Pid).First(&maxSubNd).Count(&count)
 
-		db.Table(tableName).Order("idx desc").Where("pid=?", r.Pid).Select("rgt, lft, lv, grp, idx, pid").First(&maxSubNd).Count(&count)
+		db.Table(tableName).Order("idx desc").Where("pid=?", r.Pid).Select("rgt, lft, lv, grp, idx, pid, tid").First(&maxSubNd).Count(&count)
 
 		if count == 0 {
 			// beego.Info("没有记录")
@@ -126,7 +129,7 @@ func (r *TreeModel) BeforInsertTree(tableName string, db *gorm.DB) (err error) {
 		r.Grp = pnode.Grp
 	}
 
-	return nil
+	return pnode, nil
 }
 
 //删除节点和子节点
