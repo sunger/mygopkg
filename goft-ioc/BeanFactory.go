@@ -1,7 +1,8 @@
 package Injector
 
 import (
-	"github.com/sunger/mygopkg/goft-expr/expr"
+	//"github.com/sunger/mygopkg/goft-expr/expr"
+	"fmt"
 	"reflect"
 )
 
@@ -63,36 +64,37 @@ func (this *BeanFactoryImpl) GetBeanMapper() BeanMapper {
 
 //处理依赖注入
 func (this *BeanFactoryImpl) Apply(bean interface{}) {
-	if bean == nil {
-		return
-	}
-	v := reflect.ValueOf(bean)
-	if v.Kind() == reflect.Ptr {
-		v = v.Elem()
-	}
-	if v.Kind() != reflect.Struct {
-		return
-	}
-	for i := 0; i < v.NumField(); i++ {
-		field := v.Type().Field(i)
-		if v.Field(i).CanSet() && field.Tag.Get("inject") != "" {
-			if field.Tag.Get("inject") != "-" { //多例模式
-				ret := expr.BeanExpr(field.Tag.Get("inject"), this.ExprMap)
-				if ret != nil && !ret.IsEmpty() {
-					retValue := ret[0]
-					if retValue != nil {
-						v.Field(i).Set(reflect.ValueOf(retValue))
-						this.Apply(retValue)
-					}
-				}
-			} else { //单例模式
-				if get_v := this.Get(field.Type); get_v != nil {
-					v.Field(i).Set(reflect.ValueOf(get_v))
-					this.Apply(get_v)
-				}
-			}
-		}
-	}
+	fmt.Println("请不要调用此方法，空的")
+	//if bean == nil {
+	//	return
+	//}
+	//v := reflect.ValueOf(bean)
+	//if v.Kind() == reflect.Ptr {
+	//	v = v.Elem()
+	//}
+	//if v.Kind() != reflect.Struct {
+	//	return
+	//}
+	//for i := 0; i < v.NumField(); i++ {
+	//	field := v.Type().Field(i)
+	//	if v.Field(i).CanSet() && field.Tag.Get("inject") != "" {
+	//		if field.Tag.Get("inject") != "-" { //多例模式
+	//			ret := expr.BeanExpr(field.Tag.Get("inject"), this.ExprMap)
+	//			if ret != nil && !ret.IsEmpty() {
+	//				retValue := ret[0]
+	//				if retValue != nil {
+	//					v.Field(i).Set(reflect.ValueOf(retValue))
+	//					this.Apply(retValue)
+	//				}
+	//			}
+	//		} else { //单例模式
+	//			if get_v := this.Get(field.Type); get_v != nil {
+	//				v.Field(i).Set(reflect.ValueOf(get_v))
+	//				this.Apply(get_v)
+	//			}
+	//		}
+	//	}
+	//}
 }
 func NewBeanFactory() *BeanFactoryImpl {
 	return &BeanFactoryImpl{beanMapper: make(BeanMapper), ExprMap: make(map[string]interface{})}

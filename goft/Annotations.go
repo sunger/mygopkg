@@ -1,10 +1,8 @@
 package goft
 
 import (
-	"fmt"
-	Injector "github.com/sunger/mygopkg/goft-ioc"
+	//Injector "github.com/sunger/mygopkg/goft-ioc"
 	"reflect"
-	"strings"
 )
 
 //注解处理
@@ -37,20 +35,20 @@ func (this *Value) SetTag(tag reflect.StructTag) {
 	this.tag = tag
 }
 func (this *Value) String() string {
-	get_prefix := this.tag.Get("prefix")
-	if get_prefix == "" {
-		return ""
-	}
-	prefix := strings.Split(get_prefix, ".")
-	if config := Injector.BeanFactory.Get((*SysConfig)(nil)); config != nil {
-		get_value := GetConfigValue(config.(*SysConfig).Config, prefix, 0)
-		if get_value != nil {
-			return fmt.Sprintf("%v", get_value)
-		} else {
-			return ""
-		}
-	} else {
-		return ""
-	}
-	//return "21"
+	//get_prefix := this.tag.Get("prefix")
+	//if get_prefix == "" {
+	//	return ""
+	//}
+	//prefix := strings.Split(get_prefix, ".")
+	//if config := Injector.BeanFactory.Get((*SysConfig)(nil)); config != nil {
+	//	get_value := GetConfigValue(config.(*SysConfig).Config, prefix, 0)
+	//	if get_value != nil {
+	//		return fmt.Sprintf("%v", get_value)
+	//	} else {
+	//		return ""
+	//	}
+	//} else {
+	//	return ""
+	//}
+	return "未实现"
 }

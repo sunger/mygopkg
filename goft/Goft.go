@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	Injector "github.com/sunger/mygopkg/goft-ioc"
+
+	//Injector "github.com/sunger/mygopkg/goft-ioc"
 	"log"
 	"reflect"
 	"strings"
