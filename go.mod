@@ -3,7 +3,7 @@ module github.com/sunger/mygopkg
 go 1.16
 
 require (
-	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20220527190237-ee62e23da966
+	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20200503195918-621b933c7a7f
 	github.com/casbin/casbin/v2 v2.47.1
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/gin-contrib/cors v1.3.1
