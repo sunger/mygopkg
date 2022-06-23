@@ -191,7 +191,7 @@ func postgresConn(user, password, host, port, name string) string {
 func GetDb(key string) *gorm.DB {
 
 	if key == "" || len(key) == 0 {
-		log.GetLog().Error("key为空,使用默认数据库")
+		log.GetLog().Debug("key为空,使用默认数据库")
 		return Db
 	}
 	db_, ok := DB(key)
@@ -200,7 +200,7 @@ func GetDb(key string) *gorm.DB {
 		return db_
 	}
 
-	log.GetLog().Error("没有找到数据库连接key:" + key + " 使用默认数据库")
+	log.GetLog().Debug("没有找到数据库连接key:" + key + " 使用默认数据库")
 	// goft.Error(errors.New("没有找到数据库连接key:" + key+ " 使用默认数据库"))
 	return Db
 	//err = db.Db.Find(&results).Error
@@ -231,10 +231,10 @@ func MapListToDBService(list []DbConn, config *gorm.Config) {
 		}
 		if dbService.Default == nil {
 			//dbService.Default = Db
-			fmt.Println("未配置默认数据库")
+			log.GetLog().Debug("未配置默认数据库")
 		}else{
 			//Db = dbService.Default
-			fmt.Println("配置了默认数据库")
+			log.GetLog().Debug("配置了默认数据库")
 		}
 	}()
 	//err := loadDBConfig(list)
@@ -268,7 +268,7 @@ func MapListToDBService(list []DbConn, config *gorm.Config) {
 
 			//engine, err = gorm.Open(sqlite.Open(conf.Connstring), config)
 			engine = InitSqlite(sqliteConn(conf.DbDir, conf.DbName), config)
-			fmt.Println("333333333",engine)
+
 		} else if dft == "mysql" {
 			//fmt.Println("333333333mysql" + conf.Connstring)
 			//engine, err = gorm.Open(mysql.Open(conf.Connstring), config)
