@@ -49,7 +49,8 @@ func InitDb(cfg *gorm.Config) {
 	if dft == "sqlite" {
 		dir := c.GetString("sqlite.dir")
 		name := c.GetString("sqlite.name")
-		Db = InitSqlite(sqliteConn(dir, name), cfg)
+		conn:= sqliteConn(dir, name)
+		Db = InitSqlite(conn, cfg)
 	} else if dft == "mysql" {
 		// "root:root1234@tcp(127.0.0.1:3306)/casbin?charset=utf8mb4&parseTime=True&loc=Local"
 		user := c.GetString("mysql.user")
@@ -162,7 +163,6 @@ func InitMysql(dbname, dsn, mainDsn string, cfg *gorm.Config) *gorm.DB {
 }
 
 func InitSqlite(name string, cfg *gorm.Config) *gorm.DB {
-
 	db, err := gorm.Open(sqlite.Open(name), cfg)
 
 	if err != nil {
@@ -177,7 +177,15 @@ func InitSqlite(name string, cfg *gorm.Config) *gorm.DB {
 }
 
 func sqliteConn(dir, name string) string {
-	return filepath.ToSlash(filepath.Join(dir, name))
+	path := filepath.ToSlash(filepath.Join(dir, name))
+	exist , _ := config.PathExists(path)
+
+	if !exist{
+		log.GetLog().Error("数据库文件不存在：(dir, name)->"+path+"("+dir+","+name+") 请检测dbconn表")
+		return ""
+	}
+
+	return path
 }
 
 func mysqlConn(user, password, host, port, name string) string {
