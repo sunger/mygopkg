@@ -32,9 +32,9 @@ type DbConn struct {
 	//密码
 	Pwd string `gorm:"column:pwd;size:30" json:"Pwd"`
 	//MaxOpenConns
-	MaxOpenConns int `gorm:"maxopenconns" json:"MaxOpenConns"`
+	MaxOpenConns int `gorm:"column:maxopenconns" json:"MaxOpenConns"`
 	//MaxIdleConns
-	MaxIdleConns int `gorm:"maxidleconns" json:"MaxIdleConns"`
+	MaxIdleConns int `gorm:"column:maxidleconns" json:"MaxIdleConns"`
 	//默认,没有其他更小范围的连接配置，使用此连接
 	IsDefault int `gorm:"column:isdft;size:1" json:"IsDefault"`
 	//LogLevel
