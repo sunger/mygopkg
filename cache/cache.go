@@ -63,6 +63,14 @@ func (m *UserCache) Get(id string) (UserCache,bool) {
 	}
 	return *m, b
 }
+//删除用户信息
+func (m *UserCache) Delete(id string) bool {
+	_, b := usercache_.Get(id)
+	if b {
+		usercache_.Delete(id)
+	}
+	return  b
+}
 
 
 //角色相关缓存
@@ -94,18 +102,18 @@ func (m *RoleCache) SetExt(id, key string, v interface{}) {
 	if exist {
 		rc.Ext[key] = v
 	}else {
-		userCache:= &  RoleCache{}
-		userCache.IsSuper = false
-		userCache.Ext = map[string]interface{}{
+		roleCache:= &  RoleCache{}
+		roleCache.IsSuper = false
+		roleCache.Ext = map[string]interface{}{
 			key: v,
 		}
-		usercache_.Set(id, userCache, cc.DefaultExpiration)
+		usercache_.Set(id, roleCache, cc.DefaultExpiration)
 	}
 }
 
 //获取角色信息
 func (m *RoleCache) Get(id string) (RoleCache,bool) {
-	i, b := usercache_.Get(id)
+	i, b := rolecache_.Get(id)
 	if b {
 		uc, ok := (i).(RoleCache)
 		if ok {
@@ -116,6 +124,14 @@ func (m *RoleCache) Get(id string) (RoleCache,bool) {
 	}
 	return *m, b
 }
+//删除用户信息
+func (m *RoleCache) Delete(id string) bool {
+	_, b := rolecache_.Get(id)
+	if b {
+		rolecache_.Delete(id)
+	}
+	return  b
+}
 
 
 //全局变量相关缓存
@@ -123,12 +139,22 @@ type EnvCache struct {
 	Key string //Key
 }
 func (m *EnvCache) Get(id string) (interface{},bool) {
-	return usercache_.Get(id)
+	return envcache_.Get(id)
 }
 //缓存全局变量信息
 func (m *EnvCache) Set(key string, v interface{}) {
-	usercache_.Set(key, v, cc.DefaultExpiration)
+	envcache_.Set(key, v, cc.DefaultExpiration)
 }
+
+//删除用户信息
+func (m *EnvCache) Delete(id string) bool {
+	_, b := envcache_.Get(id)
+	if b {
+		envcache_.Delete(id)
+	}
+	return  b
+}
+
 
 var RqRoleCache RoleCache
 var RqUserCache UserCache
