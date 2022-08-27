@@ -19,6 +19,7 @@ require (
 	github.com/nsqio/go-diskqueue v1.1.0 // indirect
 	github.com/nsqio/go-nsq v1.1.0 // indirect
 	github.com/nsqio/nsq v1.2.1
+	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/qiniu/api.v7/v7 v7.8.2
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
