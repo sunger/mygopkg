@@ -12,7 +12,7 @@ import (
 分页基类,每个分页基本都要这些字段（针对amis定制）
 */
 type PagePms struct {
-	Page int `json:"page" binding:"required"`
+	Page int `json:"page"`
 	Size int `json:"size" binding:"required,gt=0,lt=1000000"`
 	// Sort []Sorts    `json:"sort"`
 	Conds    Conditions `json:"conditions"`
@@ -56,7 +56,7 @@ type ConditionLeft struct {
 
 func (m *PagePms) GetFlts() (strs []string) {
 	strs = make([]string, 2)
-	if m.Page == 0 {
+	if m.Page < 1 {
 		m.Page = 1
 	}
 	orderstr := ""
