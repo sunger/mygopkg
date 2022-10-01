@@ -59,7 +59,7 @@ func (r *Module) Get(id string) (Module, error) {
 }
 func (u *Module) FindByPath(path string) (Module, error) {
 	user := Module{}
-	err := Db.Find(&user, "path = ? ", path).Error
+	err := Db.First(&user, "path = ? ", path).Error
 	return user, err
 }
 
