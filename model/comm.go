@@ -44,7 +44,10 @@ import (
 //		return bReq, nil
 //	}
 //}
-
+// id集合
+type Ids struct {
+	Ids     []string  `json:"Ids"`  //Ids
+}
 type CmdArg struct {
 	// 模块版本
 	Vs string
