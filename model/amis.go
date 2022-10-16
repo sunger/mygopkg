@@ -97,21 +97,38 @@ func (m *PagePms) GetFlts() (strs []string) {
 	}
 
 	strs[1] = orderstr
-
 	return strs
+}
+
+func (m *PagePms)  filterStr(list []string) []string{
+	var r []string
+
+	for _, s := range list {
+		s_:= strings.TrimSpace(s)
+		if s_ == "" || len(s_) == 0 {
+			continue
+		}
+		r = append(r,  s_)
+	}
+
+	return r
 }
 
 func (m *PagePms) FilterItems(children []Conditions, parent Conditions) (strs []string) {
 
 	strs = make([]string, len(children))
 
-	for _, v := range children {
-
+	for i, v := range children {
+		fmt.Println("arr2str>>>>>i",i)
 		if len(v.Children) > 0 {
+
 			str2 := m.FilterItems(v.Children, v)
+			str2 = m.filterStr(str2)
+			fmt.Println("str2>>>>>",v, str2)
 			arr2str := strings.Join(str2, " "+v.Conjunction+" ")
+			fmt.Println("arr2str>>>>>",arr2str)
 			if len(arr2str) > 5 {
-				strs = append(strs, arr2str)
+				strs = append(strs, "("+arr2str+")")
 			}
 		} else {
 			// strs = make([]string, len(cds))
