@@ -51,9 +51,9 @@ func (r *BModel) CreateId() {
 
 // 所有模型类的基类（多3个时间字段）
 type BaseModel struct {
-	CreatedAt time.Time  `gorm:"column:createdat" json:"CreatedAt"` //创建时间
-	UpdatedAt time.Time  `gorm:"column:updatedat" json:"UpdatedAt"` //最后修改时间
-	DeletedAt *time.Time `gorm:"column:deletedat" json:"DeletedAt"` //删除时间
+	CreatedAt MyTime  `gorm:"column:createdat;type:datetime;" json:"CreatedAt"` //创建时间
+	UpdatedAt MyTime  `gorm:"column:updatedat;type:datetime;" json:"UpdatedAt"` //最后修改时间
+	DeletedAt MyTime `gorm:"column:deletedat;type:datetime;" json:"DeletedAt"` //删除时间
 	BsModel
 }
 
